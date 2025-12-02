@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <!-- Accent color circle -->
+  <circle cx="64" cy="64" r="60" fill="#0891b2"/>
+  <!-- Play triangle (white) -->
+  <path d="M52 44 L52 84 L88 64 Z" fill="#ffffff"/>
+</svg>

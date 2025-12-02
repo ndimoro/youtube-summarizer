@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TL;DW - Millions of videos. Most say nothing. Find signal in the noise. Free, open source YouTube summarizer. Your API key, your privacy.">
+    <meta name="keywords" content="youtube summarizer, video summary, free extension, open source, AI summary, claude, gpt-4, gemini">
+    <meta name="author" content="Nick DiMoro">
+    <meta property="og:title" content="TL;DW - Signal From Noise">
+    <meta property="og:description" content="The feed is infinite. Your attention is not. AI summaries of any YouTube video. Free and open source.">
+    <meta property="og:image" content="./assets/marquee-1400x560.png">
+    <meta property="og:type" content="website">
+    <title>TL;DW - YouTube Video Summarizer | Free & Open Source</title>
+    <link rel="icon" type="image/png" href="./assets/icon-128.png">
+
+    <!-- Neo-Broadstreet Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* ═══════════════════════════════════════════════════════════════
+           NEO-BROADSTREET DESIGN SYSTEM
+           Editorial newspaper aesthetic with tech undertones
+           ═══════════════════════════════════════════════════════════════ */
+
+        :root {
+            /* Typography */
+            --font-display: 'Newsreader', 'Times New Roman', Georgia, serif;
+            --font-body: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', 'SF Mono', 'Consolas', monospace;
+
+            /* Colors - High Contrast Newspaper */
+            --color-bg: #fafaf9;
+            --color-surface: #ffffff;
+            --color-ink: #0f0f0f;
+            --color-ink-muted: #525252;
+            --color-ink-light: #737373;
+            --color-cream: #fef7ee;
+
+            /* Accent - Cyan Tech */
+            --color-accent: #0891b2;
+            --color-accent-bright: #06b6d4;
+            --color-accent-muted: #67e8f9;
+            --color-accent-bg: #ecfeff;
+
+            /* Rule Lines & Structure */
+            --color-rule: #e5e5e5;
+            --color-rule-dark: #d4d4d4;
+            --rule-thin: 1px;
+            --rule-thick: 2px;
+            --rule-heavy: 3px;
+
+            /* Shadows - Minimal Editorial */
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+            /* Spacing */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+            --space-3xl: 64px;
+            --space-4xl: 96px;
+
+            /* Transitions */
+            --transition-fast: 120ms ease;
+            --transition-smooth: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-editorial: 400ms cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        /* Reset */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--color-ink);
+            background: var(--color-bg);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            hyphens: none;
+            -webkit-hyphens: none;
+            -ms-hyphens: none;
+        }
+
+        /* Selection */
+        ::selection {
+            background: var(--color-accent-muted);
+            color: var(--color-ink);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           MASTHEAD HEADER
+           ═══════════════════════════════════════════════════════════════ */
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: var(--color-surface);
+            border-bottom: var(--rule-thick) solid var(--color-ink);
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            right: 0;
+            height: var(--rule-thin);
+            background: var(--color-ink);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-md) var(--space-xl);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            text-decoration: none;
+            color: var(--color-ink);
+        }
+
+        .logo img {
+            width: 28px;
+            height: 28px;
+        }
+
+        .logo-text {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: var(--space-xl);
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-ink-muted);
+            text-decoration: none;
+            transition: var(--transition-fast);
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: var(--rule-thin);
+            background: var(--color-accent);
+            transition: var(--transition-smooth);
+        }
+
+        .nav-links a:hover {
+            color: var(--color-ink);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: var(--rule-thin) solid var(--color-rule);
+            padding: var(--space-sm);
+            cursor: pointer;
+            color: var(--color-ink);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           HERO - FRONT PAGE ABOVE THE FOLD
+           ═══════════════════════════════════════════════════════════════ */
+
+        .hero {
+            padding: 140px var(--space-xl) var(--space-4xl);
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 100px;
+            left: var(--space-xl);
+            right: var(--space-xl);
+            height: var(--rule-thin);
+            background: var(--color-rule);
+        }
+
+        .edition-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-md) 0;
+            margin-bottom: var(--space-lg);
+            border-bottom: var(--rule-thin) solid var(--color-rule);
+        }
+
+        .edition-date {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-ink-light);
+        }
+
+        .edition-badge {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--color-accent);
+            padding: var(--space-xs) var(--space-sm);
+            border: var(--rule-thin) solid var(--color-accent);
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-3xl);
+            align-items: start;
+        }
+
+        .hero-main {
+            position: relative;
+        }
+
+        .category-label {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-accent);
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .category-label::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--color-accent);
+        }
+
+        h1 {
+            font-family: var(--font-display);
+            font-size: 3.5rem;
+            font-weight: 600;
+            line-height: 1.05;
+            letter-spacing: -0.025em;
+            color: var(--color-ink);
+            margin-bottom: var(--space-lg);
+        }
+
+        .hero-deck {
+            font-family: var(--font-display);
+            font-size: 1.35rem;
+            font-weight: 400;
+            font-style: italic;
+            line-height: 1.5;
+            color: var(--color-ink-muted);
+            margin-bottom: var(--space-xl);
+            border-left: var(--rule-thick) solid var(--color-accent);
+            padding-left: var(--space-md);
+        }
+
+        .hero-lede {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--color-ink);
+            text-align: left;
+            hyphens: none;
+            margin-bottom: var(--space-xl);
+        }
+
+        .hero-lede::first-letter {
+            font-family: var(--font-display);
+            font-size: 4em;
+            font-weight: 600;
+            float: left;
+            line-height: 0.8;
+            margin-right: 0.1em;
+            margin-top: 0.05em;
+            color: var(--color-ink);
+        }
+
+        .cta-group {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-md) var(--space-xl);
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--color-ink);
+            color: var(--color-surface);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+            transition: left 0.4s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--color-accent);
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--color-ink);
+            border: var(--rule-thin) solid var(--color-ink);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-ink);
+            color: var(--color-surface);
+        }
+
+        .btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Chrome Web Store Badge */
+        .chrome-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-top: var(--space-lg);
+            padding: var(--space-sm) var(--space-md);
+            background: transparent;
+            border: var(--rule-thin) solid var(--color-rule);
+            text-decoration: none;
+            transition: var(--transition-smooth);
+            opacity: 0.7;
+        }
+
+        .chrome-badge:hover {
+            opacity: 1;
+            border-color: var(--color-ink-muted);
+            background: var(--color-cream);
+        }
+
+        .chrome-logo {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        .chrome-badge-text {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--color-ink-muted);
+        }
+
+        .chrome-badge:hover .chrome-badge-text {
+            color: var(--color-ink);
+        }
+
+        /* Hero Image Column - Editorial Spread */
+        .hero-visual {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-visual::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -100px;
+            right: -100px;
+            height: 1px;
+            background: var(--color-ink);
+            z-index: 0;
+        }
+
+        .hero-screenshot-wrapper {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xl);
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-screenshot {
+            max-width: 320px;
+            transform: rotate(-2deg);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+            background: var(--color-surface);
+        }
+
+        .hero-screenshot img {
+            width: 100%;
+            display: block;
+        }
+
+        .hero-pull-quote {
+            max-width: 200px;
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-style: italic;
+            color: var(--color-ink);
+            line-height: 1.5;
+            border-left: 3px solid var(--color-accent);
+            padding-left: var(--space-md);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           FEATURES - EDITORIAL COLUMNS
+           ═══════════════════════════════════════════════════════════════ */
+
+        .features {
+            background: var(--color-surface);
+            border-top: var(--rule-heavy) solid var(--color-ink);
+            border-bottom: var(--rule-heavy) solid var(--color-ink);
+            position: relative;
+        }
+
+        .features::before,
+        .features::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: var(--rule-thin);
+            background: var(--color-ink);
+        }
+
+        .features::before {
+            top: 4px;
+        }
+
+        .features::after {
+            bottom: 4px;
+        }
+
+        .features-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-3xl) var(--space-xl);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: var(--space-3xl);
+            position: relative;
+        }
+
+        .section-header::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: var(--rule-thick);
+            background: var(--color-accent);
+            margin: var(--space-lg) auto 0;
+        }
+
+        .section-eyebrow {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-accent);
+            margin-bottom: var(--space-sm);
+        }
+
+        .section-header h2 {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--color-ink);
+            margin-bottom: var(--space-md);
+        }
+
+        .section-header p {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-style: italic;
+            color: var(--color-ink-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0;
+            border: var(--rule-thin) solid var(--color-rule);
+        }
+
+        .feature-card {
+            padding: var(--space-xl);
+            border-right: var(--rule-thin) solid var(--color-rule);
+            border-bottom: var(--rule-thin) solid var(--color-rule);
+            background: var(--color-surface);
+            transition: var(--transition-editorial);
+            position: relative;
+        }
+
+        .feature-card:nth-child(3n) {
+            border-right: none;
+        }
+
+        .feature-card:nth-child(n+4) {
+            border-bottom: none;
+        }
+
+        .feature-card:hover {
+            background: var(--color-cream);
+        }
+
+        .feature-number {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            color: var(--color-accent);
+            margin-bottom: var(--space-md);
+        }
+
+        .feature-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.35rem;
+            font-weight: 500;
+            color: var(--color-ink);
+            margin-bottom: var(--space-sm);
+            line-height: 1.3;
+        }
+
+        .feature-card p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: var(--color-ink-muted);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           SCREENSHOTS - PHOTO SPREAD
+           ═══════════════════════════════════════════════════════════════ */
+
+        .screenshots {
+            padding: var(--space-4xl) var(--space-xl);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-lg);
+            margin-top: var(--space-3xl);
+        }
+
+        .screenshot-card {
+            background: var(--color-surface);
+            border: var(--rule-thin) solid var(--color-rule);
+            transition: var(--transition-editorial);
+        }
+
+        .screenshot-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        .screenshot-card img {
+            width: 100%;
+            display: block;
+            border-bottom: var(--rule-thin) solid var(--color-rule);
+        }
+
+        .screenshot-caption {
+            padding: var(--space-md);
+        }
+
+        .screenshot-caption h4 {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--color-ink);
+            margin-bottom: var(--space-xs);
+        }
+
+        .screenshot-caption p {
+            font-size: 0.85rem;
+            color: var(--color-ink-muted);
+            line-height: 1.6;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           HOW IT WORKS - STEP GUIDE
+           ═══════════════════════════════════════════════════════════════ */
+
+        .how-it-works {
+            background: var(--color-cream);
+            border-top: var(--rule-thin) solid var(--color-rule);
+            border-bottom: var(--rule-thin) solid var(--color-rule);
+            padding: var(--space-4xl) var(--space-xl);
+        }
+
+        .how-it-works-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-xl);
+            margin-top: var(--space-3xl);
+            position: relative;
+        }
+
+        .steps-grid::before {
+            content: '';
+            position: absolute;
+            top: 28px;
+            left: 60px;
+            right: 60px;
+            height: var(--rule-thin);
+            background: var(--color-rule-dark);
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 56px;
+            height: 56px;
+            background: var(--color-surface);
+            border: var(--rule-thick) solid var(--color-ink);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-lg);
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--color-ink);
+            position: relative;
+            z-index: 1;
+            transition: var(--transition-smooth);
+        }
+
+        .step:hover .step-number {
+            background: var(--color-accent);
+            border-color: var(--color-accent);
+            color: var(--color-surface);
+        }
+
+        .step h3 {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 500;
+            color: var(--color-ink);
+            margin-bottom: var(--space-sm);
+        }
+
+        .step p {
+            font-size: 0.9rem;
+            color: var(--color-ink-muted);
+            line-height: 1.6;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           PRICING - CLASSIFIED AD STYLE
+           ═══════════════════════════════════════════════════════════════ */
+
+        .pricing {
+            padding: var(--space-4xl) var(--space-xl);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .pricing-card {
+            background: var(--color-surface);
+            border: var(--rule-thick) solid var(--color-ink);
+            position: relative;
+            margin-top: var(--space-3xl);
+        }
+
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            right: 4px;
+            bottom: 4px;
+            border: var(--rule-thin) solid var(--color-ink);
+            pointer-events: none;
+        }
+
+        .pricing-header {
+            text-align: center;
+            padding: var(--space-xl);
+            border-bottom: var(--rule-thick) solid var(--color-ink);
+            position: relative;
+        }
+
+        .pricing-header::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: var(--space-xl);
+            right: var(--space-xl);
+            height: var(--rule-thin);
+            background: var(--color-ink);
+        }
+
+        .price {
+            font-family: var(--font-display);
+            font-size: 5rem;
+            font-weight: 700;
+            color: var(--color-ink);
+            line-height: 1;
+            margin-bottom: var(--space-sm);
+        }
+
+        .price-note {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-accent);
+        }
+
+        .pricing-body {
+            padding: var(--space-xl);
+        }
+
+        .pricing-features {
+            list-style: none;
+            columns: 2;
+            column-gap: var(--space-xl);
+        }
+
+        .pricing-features li {
+            position: relative;
+            padding: var(--space-sm) 0;
+            padding-left: var(--space-lg);
+            font-size: 0.95rem;
+            color: var(--color-ink);
+            break-inside: avoid;
+        }
+
+        .pricing-features li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 14px;
+            width: 8px;
+            height: 8px;
+            border: var(--rule-thin) solid var(--color-accent);
+            transform: rotate(45deg);
+        }
+
+        .pricing-footer {
+            padding: var(--space-lg) var(--space-xl);
+            background: var(--color-cream);
+            border-top: var(--rule-thin) solid var(--color-rule);
+            text-align: center;
+        }
+
+        .pricing-footer p {
+            font-size: 0.9rem;
+            color: var(--color-ink-muted);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           CTA - CALL TO ACTION
+           ═══════════════════════════════════════════════════════════════ */
+
+        .cta-section {
+            background: var(--color-ink);
+            color: var(--color-surface);
+            padding: var(--space-4xl) var(--space-xl);
+            text-align: center;
+            position: relative;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: var(--space-md);
+            left: var(--space-md);
+            right: var(--space-md);
+            bottom: var(--space-md);
+            border: var(--rule-thin) solid rgba(255,255,255,0.2);
+            pointer-events: none;
+        }
+
+        .cta-content {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .cta-content h2 {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: var(--space-lg);
+        }
+
+        .cta-content p {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: var(--space-xl);
+            line-height: 1.7;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: var(--space-md);
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: var(--space-lg);
+        }
+
+        .btn-cta {
+            background: var(--color-accent);
+            color: var(--color-surface);
+        }
+
+        .btn-cta:hover {
+            background: var(--color-accent-bright);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--color-surface);
+            border: var(--rule-thin) solid rgba(255,255,255,0.4);
+        }
+
+        .btn-ghost:hover {
+            background: var(--color-surface);
+            color: var(--color-ink);
+        }
+
+        .cta-note {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           FOOTER - COLOPHON
+           ═══════════════════════════════════════════════════════════════ */
+
+        footer {
+            background: var(--color-surface);
+            border-top: var(--rule-heavy) solid var(--color-ink);
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 0;
+            right: 0;
+            height: var(--rule-thin);
+            background: var(--color-ink);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-3xl) var(--space-xl);
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: var(--space-3xl);
+        }
+
+        .footer-brand h4 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            margin-bottom: var(--space-md);
+        }
+
+        .footer-brand p {
+            font-size: 0.95rem;
+            color: var(--color-ink-muted);
+            line-height: 1.7;
+        }
+
+        .footer-section h5 {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-ink);
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-sm);
+            border-bottom: var(--rule-thin) solid var(--color-rule);
+        }
+
+        .footer-section a {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--color-ink-muted);
+            text-decoration: none;
+            padding: var(--space-xs) 0;
+            transition: var(--transition-fast);
+        }
+
+        .footer-section a:hover {
+            color: var(--color-accent);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-lg) var(--space-xl);
+            border-top: var(--rule-thin) solid var(--color-rule);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-bottom p {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.05em;
+            color: var(--color-ink-light);
+            text-transform: uppercase;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           ANIMATIONS
+           ═══════════════════════════════════════════════════════════════ */
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .hero-main,
+        .hero-visual {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero-visual {
+            animation-delay: 0.2s;
+            animation-fill-mode: both;
+        }
+
+        .feature-card {
+            animation: fadeInUp 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .feature-card:nth-child(1) { animation-delay: 0.1s; }
+        .feature-card:nth-child(2) { animation-delay: 0.15s; }
+        .feature-card:nth-child(3) { animation-delay: 0.2s; }
+        .feature-card:nth-child(4) { animation-delay: 0.25s; }
+        .feature-card:nth-child(5) { animation-delay: 0.3s; }
+        .feature-card:nth-child(6) { animation-delay: 0.35s; }
+
+        /* ═══════════════════════════════════════════════════════════════
+           RESPONSIVE
+           ═══════════════════════════════════════════════════════════════ */
+
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: var(--space-xl);
+            }
+
+            .hero-visual::before {
+                left: 0;
+                right: 0;
+            }
+
+            .hero-screenshot-wrapper {
+                flex-direction: column;
+                gap: var(--space-lg);
+            }
+
+            .hero-screenshot {
+                max-width: 280px;
+            }
+
+            .hero-pull-quote {
+                max-width: 100%;
+                text-align: center;
+                border-left: none;
+                border-top: 3px solid var(--color-accent);
+                padding-left: 0;
+                padding-top: var(--space-md);
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .feature-card:nth-child(2n) {
+                border-right: none;
+            }
+
+            .feature-card:nth-child(n+5) {
+                border-bottom: none;
+            }
+
+            .screenshots-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--space-xl);
+            }
+
+            .steps-grid::before {
+                display: none;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .nav-links.active {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--color-surface);
+                padding: var(--space-lg);
+                border-bottom: var(--rule-thick) solid var(--color-ink);
+                gap: var(--space-md);
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-card {
+                border-right: none !important;
+                border-bottom: var(--rule-thin) solid var(--color-rule) !important;
+            }
+
+            .feature-card:last-child {
+                border-bottom: none !important;
+            }
+
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-features {
+                columns: 1;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: var(--space-xl);
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: var(--space-md);
+                text-align: center;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn {
+                justify-content: center;
+            }
+
+            .chrome-badge {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            :root {
+                font-size: 15px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .section-header h2 {
+                font-size: 1.75rem;
+            }
+
+            .hero {
+                padding: 120px var(--space-md) var(--space-2xl);
+            }
+
+            .hero::before {
+                left: var(--space-md);
+                right: var(--space-md);
+            }
+
+            .edition-line {
+                flex-direction: column;
+                gap: var(--space-sm);
+                text-align: center;
+            }
+
+            .hero-lede::first-letter {
+                font-size: 3em;
+            }
+
+            .price {
+                font-size: 3.5rem;
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           PRINT STYLES
+           ═══════════════════════════════════════════════════════════════ */
+
+        @media print {
+            header, .cta-section, footer {
+                display: none;
+            }
+
+            body {
+                background: white;
+            }
+
+            .hero {
+                padding-top: var(--space-xl);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Masthead Header -->
+    <header>
+        <nav>
+            <a href="#" class="logo">
+                <img src="./assets/logo.svg" alt="TL;DW">
+                <span class="logo-text">TL;DW</span>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#screenshots">Screenshots</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="https://github.com/ndimoro/tldw-youtube-summarizer" target="_blank">GitHub</a></li>
+            </ul>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Hero - Front Page -->
+    <section class="hero">
+        <div class="edition-line">
+            <span class="edition-date">Chrome Extension</span>
+            <span class="edition-badge">Free & Open Source</span>
+        </div>
+
+        <div class="hero-content">
+            <div class="hero-main">
+                <div class="category-label">YouTube Summarizer</div>
+                <h1>Millions of Videos.<br>Most Say Nothing.</h1>
+                <p class="hero-deck">The feed is infinite. Your attention is not. Find signal in the noise.</p>
+                <p class="hero-lede">Every hour, 500 hours of video are uploaded. The algorithm thrives on your uncertainty, keeping you watching "just in case." This is the antidote. One click distills any video to its essence. Know in seconds if it deserves your time. Your API key, your privacy, about a penny per video.</p>
+                <div class="cta-group">
+                    <a href="#install" class="btn btn-primary">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        Install Free
+                    </a>
+                    <a href="https://github.com/ndimoro/tldw-youtube-summarizer" target="_blank" class="btn btn-secondary">
+                        <svg fill="currentColor" viewBox="0 0 24 24" width="14" height="14">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        View Source
+                    </a>
+                </div>
+                <a href="#install" class="chrome-badge">
+                    <svg class="chrome-logo" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" fill="#fff"/>
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="#4285F4"/>
+                        <path d="M12 2v6.5l5.63 3.25L22 12c0-5.52-4.48-10-10-10z" fill="#EA4335"/>
+                        <path d="M12 8.5L6.37 11.75 2 12c0 5.52 4.48 10 10 10v-6.5L12 8.5z" fill="#34A853"/>
+                        <path d="M12 8.5v7l5.63-3.25L12 8.5z" fill="#FBBC05"/>
+                        <circle cx="12" cy="12" r="4" fill="#fff"/>
+                        <circle cx="12" cy="12" r="3.2" fill="#4285F4"/>
+                    </svg>
+                    <span class="chrome-badge-text">Coming Soon to Chrome Web Store</span>
+                </a>
+            </div>
+
+            <div class="hero-visual">
+                <div class="hero-screenshot-wrapper">
+                    <div class="hero-screenshot">
+                        <img src="./assets/product-screenshot.png" alt="TL;DW Summary View">
+                    </div>
+                    <blockquote class="hero-pull-quote">"Know in seconds if it deserves your time."</blockquote>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="features-inner">
+            <div class="section-header">
+                <div class="section-eyebrow">Capabilities</div>
+                <h2>Order From Chaos</h2>
+                <p>The essential. Nothing superfluous.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-number">01</div>
+                    <h3>Distillation</h3>
+                    <p>Hours reduced to minutes. Know if content deserves your attention before you give it.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-number">02</div>
+                    <h3>Discernment</h3>
+                    <p>The insights that matter, surfaced. Skip the filler, the tangents, the sponsored segments.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-number">03</div>
+                    <h3>Preservation</h3>
+                    <p>One click to Obsidian, Logseq, or Markdown. Knowledge captured in your system.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-number">04</div>
+                    <h3>Choice</h3>
+                    <p>Claude, GPT-4, or Gemini. Your preferred model. Your API key. No intermediary.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-number">05</div>
+                    <h3>Sovereignty</h3>
+                    <p>No accounts. No tracking. Keys stored locally. Your data never leaves your machine.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-number">06</div>
+                    <h3>Transparency</h3>
+                    <p>MIT licensed. Every line readable. No black boxes. No hidden agendas.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screenshots Section -->
+    <section class="screenshots" id="screenshots">
+        <div class="section-header">
+            <div class="section-eyebrow">Interface</div>
+            <h2>Clarity By Design</h2>
+            <p>No visual clutter. No decision fatigue. Just information.</p>
+        </div>
+
+        <div class="screenshots-grid">
+            <div class="screenshot-card">
+                <img src="./assets/screenshot-1.png" alt="Extension popup showing AI-generated summary" loading="lazy">
+                <div class="screenshot-caption">
+                    <h4>Summaries</h4>
+                    <p>One click. Instant results.</p>
+                </div>
+            </div>
+
+            <div class="screenshot-card">
+                <img src="./assets/screenshot-2.png" alt="Settings and configuration page" loading="lazy">
+                <div class="screenshot-caption">
+                    <h4>Setup</h4>
+                    <p>Pick provider. Paste key. Done.</p>
+                </div>
+            </div>
+
+            <div class="screenshot-card">
+                <img src="./assets/screenshot-3.png" alt="Export options to various formats" loading="lazy">
+                <div class="screenshot-caption">
+                    <h4>Export</h4>
+                    <p>Obsidian, Logseq, Markdown.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="how-it-works-inner">
+            <div class="section-header">
+                <div class="section-eyebrow">Setup</div>
+                <h2>Simplicity Is Deliberate</h2>
+                <p>Complexity is easy. Simplicity takes discipline.</p>
+            </div>
+
+            <div class="steps-grid">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Install</h3>
+                    <p>Add to Chrome. One click.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Configure</h3>
+                    <p>Pick AI. Paste key.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Analyze</h3>
+                    <p>Open video. Click icon.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Read</h3>
+                    <p>Summary. Insights. Done.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="section-header">
+            <div class="section-eyebrow">Cost</div>
+            <h2>No Middleman</h2>
+            <p>Free tool. You pay the AI directly. Honest economics.</p>
+        </div>
+
+        <div class="pricing-card">
+            <div class="pricing-header">
+                <div class="price">$0</div>
+                <div class="price-note">Extension cost: Zero. API cost: ~1 cent per video.</div>
+            </div>
+            <div class="pricing-body">
+                <ul class="pricing-features">
+                    <li>Unlimited use</li>
+                    <li>All AI providers</li>
+                    <li>All export formats</li>
+                    <li>No ads</li>
+                    <li>No tracking</li>
+                    <li>No account</li>
+                    <li>No data collection</li>
+                    <li>Full source code</li>
+                </ul>
+            </div>
+            <div class="pricing-footer">
+                <p>Direct relationship with your AI provider. No rent-seeking. No markup.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="install">
+        <div class="cta-content">
+            <h2>Reclaim Your Attention</h2>
+            <p>The infinite scroll wins when you can't distinguish signal from noise. This levels the field.</p>
+            <div class="cta-buttons">
+                <a href="https://github.com/ndimoro/tldw-youtube-summarizer#installation" target="_blank" class="btn btn-cta">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="14" height="14">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    Install Now
+                </a>
+                <a href="https://github.com/ndimoro/tldw-youtube-summarizer" target="_blank" class="btn btn-ghost">
+                    View Source
+                </a>
+            </div>
+            <p class="cta-note">Chrome, Edge, Brave, Arc, and all Chromium browsers</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h4>TL;DW</h4>
+                <p>A tool for those who value their attention. Open source. No subscriptions. No surveillance.</p>
+            </div>
+
+            <div class="footer-section">
+                <h5>Product</h5>
+                <a href="#features">Features</a>
+                <a href="#screenshots">Screenshots</a>
+                <a href="#how-it-works">Setup</a>
+                <a href="#pricing">Pricing</a>
+            </div>
+
+            <div class="footer-section">
+                <h5>Resources</h5>
+                <a href="https://github.com/ndimoro/tldw-youtube-summarizer" target="_blank">GitHub</a>
+                <a href="https://github.com/ndimoro/tldw-youtube-summarizer#installation" target="_blank">Install</a>
+                <a href="https://github.com/ndimoro/tldw-youtube-summarizer/issues" target="_blank">Issues</a>
+                <a href="https://github.com/ndimoro/tldw-youtube-summarizer/blob/main/LICENSE" target="_blank">License</a>
+            </div>
+
+            <div class="footer-section">
+                <h5>Legal</h5>
+                <a href="mailto:support@tldw.movermarketing.ai">Contact</a>
+                <a href="./privacy.md" target="_blank">Privacy</a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2025 TL;DW. MIT License.</p>
+            <p>Nick DiMoro</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking a link
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for scroll animation
+        document.querySelectorAll('.feature-card, .screenshot-card, .step').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

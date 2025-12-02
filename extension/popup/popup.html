@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TL;DW</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <button id="settings-btn" class="settings-btn" title="Settings" aria-label="Open settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </button>
+      <h1>TL;DW</h1>
+    </header>
+
+    <div id="loading" class="loading hidden">
+      <div class="spinner"></div>
+      <p>Analyzing video</p>
+    </div>
+
+    <div id="error" class="error hidden">
+      <div class="error-icon">!</div>
+      <p id="error-message"></p>
+    </div>
+
+    <div id="no-api-key" class="warning hidden">
+      <p><strong>API Key Required</strong></p>
+      <p class="warning-detail">This extension requires an API key from your preferred AI provider (Claude, GPT-4, or Gemini).</p>
+      <p class="warning-detail">Configure your provider and API key in settings to get started.</p>
+      <button id="open-settings">Configure Settings</button>
+    </div>
+
+    <div id="content" class="content hidden">
+      <div class="video-title">
+        <h2 id="video-title"></h2>
+      </div>
+
+      <article class="section">
+        <h3>Summary</h3>
+        <div id="summary" class="summary-text"></div>
+      </article>
+
+      <section class="section">
+        <h3>Key Revelations</h3>
+        <ul id="revelations" class="revelations-list"></ul>
+      </section>
+
+      <section class="section">
+        <h3>Takeaways</h3>
+        <ul id="takeaways" class="takeaways-list"></ul>
+      </section>
+
+      <!-- Export Actions -->
+      <div id="export-actions" class="export-actions">
+        <span class="export-label">Save & Export</span>
+        <div class="export-buttons">
+          <button id="export-copy" class="export-btn" disabled title="Copy summary to clipboard" aria-label="Copy summary as markdown to clipboard">
+            <svg class="export-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <span>Copy</span>
+          </button>
+          <button id="export-download" class="export-btn" disabled title="Download as markdown file" aria-label="Download summary as markdown file">
+            <svg class="export-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>Download</span>
+          </button>
+          <button id="export-obsidian" class="export-btn export-btn-obsidian" disabled title="Save to Obsidian vault" aria-label="Export summary to Obsidian">
+            <img src="../icons/obsidian.svg" alt="" class="export-icon brand-icon" aria-hidden="true" />
+            <span>Obsidian</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast notification container -->
+    <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true">
+      <div id="toast" class="toast"></div>
+    </div>
+
+    <div id="analyze-button-container" class="analyze-container">
+      <button id="analyze-button" class="analyze-btn">Analyze Video</button>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
