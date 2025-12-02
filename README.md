@@ -4,7 +4,7 @@ A free, open source Chrome extension that summarizes YouTube videos using AI. Ge
 
 **100% Free. No subscriptions. No premium tiers. Ever.**
 
-![TL;DW Screenshot](docs/assets/product-screenshot.png)
+<img src="docs/assets/product-screenshot.png" alt="TL;DW Screenshot" width="40%">
 
 ## Features
 
