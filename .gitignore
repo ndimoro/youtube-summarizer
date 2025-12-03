@@ -1,0 +1,50 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Chrome extension files
+*.crx
+*.pem
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+
+# Node modules (if you add any build tools later)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Temporary files
+tmp/
+temp/
+
+# Local development files (not for public repo)
+store-assets/
+prompts/
+branding.md
+chrome-store-submission/
+PLAN.md
+ARCHITECTURE.md
+PROJECT_SUMMARY.md
+QUICK_REFERENCE.md
+DIRECTORY_STRUCTURE.txt
+TESTING_CHECKLIST.md
+INSTALLATION.md
+IMPLEMENTATION_PLAN.md
+*.zip

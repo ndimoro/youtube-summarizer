@@ -1,0 +1,2308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Primary Meta Tags -->
+    <title>TL;DW - Free YouTube Video Summarizer | AI-Powered Chrome Extension</title>
+    <meta name="title" content="TL;DW - Free YouTube Video Summarizer | AI-Powered Chrome Extension">
+    <meta name="description" content="Summarize any YouTube video in seconds with AI. Free, open source Chrome extension using Claude, GPT-4, or Gemini. No subscriptions, no tracking. Get instant video summaries, key insights, and actionable takeaways.">
+    <meta name="keywords" content="YouTube summarizer, YouTube video summarizer, AI video summary, YouTube AI summary, summarize YouTube videos, YouTube transcript summarizer, video summary extension, Chrome extension YouTube, free YouTube summarizer, open source video summarizer, Claude YouTube, GPT-4 YouTube, Gemini YouTube, YouTube summary tool, video digest, YouTube TLDR, too long didn't watch">
+    <meta name="author" content="Nick DiMoro">
+    <meta name="creator" content="Nick DiMoro">
+    <meta name="publisher" content="Mover Marketing AI">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow">
+    <link rel="canonical" href="https://tldw.nickdimoro.com/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tldw.nickdimoro.com/">
+    <meta property="og:title" content="TL;DW - Free YouTube Video Summarizer | AI-Powered Chrome Extension">
+    <meta property="og:description" content="Summarize any YouTube video in seconds with AI. Free, open source Chrome extension using Claude, GPT-4, or Gemini. No subscriptions, no tracking.">
+    <meta property="og:image" content="https://tldw.nickdimoro.com/assets/marquee-1400x560.png">
+    <meta property="og:image:width" content="1400">
+    <meta property="og:image:height" content="560">
+    <meta property="og:image:alt" content="TL;DW YouTube Video Summarizer - AI-powered Chrome extension">
+    <meta property="og:site_name" content="TL;DW - YouTube Video Summarizer">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://tldw.nickdimoro.com/">
+    <meta name="twitter:title" content="TL;DW - Free YouTube Video Summarizer | AI-Powered Chrome Extension">
+    <meta name="twitter:description" content="Summarize any YouTube video in seconds with AI. Free, open source Chrome extension using Claude, GPT-4, or Gemini.">
+    <meta name="twitter:image" content="https://tldw.nickdimoro.com/assets/marquee-1400x560.png">
+    <meta name="twitter:creator" content="@nickdimoro">
+
+    <!-- Additional SEO -->
+    <meta name="application-name" content="TL;DW">
+    <meta name="apple-mobile-web-app-title" content="TL;DW">
+    <meta name="theme-color" content="#0891b2">
+    <meta name="msapplication-TileColor" content="#0891b2">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="128x128" href="./assets/icon-128.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="./assets/icon-48.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./assets/icon-16.png">
+    <link rel="apple-touch-icon" href="./assets/icon-128.png">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "WebSite",
+                "@id": "https://tldw.nickdimoro.com/#website",
+                "url": "https://tldw.nickdimoro.com/",
+                "name": "TL;DW - YouTube Video Summarizer",
+                "description": "Free, open source AI-powered YouTube video summarizer Chrome extension",
+                "publisher": {
+                    "@id": "https://tldw.nickdimoro.com/#organization"
+                },
+                "inLanguage": "en-US"
+            },
+            {
+                "@type": "WebPage",
+                "@id": "https://tldw.nickdimoro.com/#webpage",
+                "url": "https://tldw.nickdimoro.com/",
+                "name": "TL;DW - Free YouTube Video Summarizer | AI-Powered Chrome Extension",
+                "isPartOf": {
+                    "@id": "https://tldw.nickdimoro.com/#website"
+                },
+                "about": {
+                    "@id": "https://tldw.nickdimoro.com/#softwareapplication"
+                },
+                "description": "Summarize any YouTube video in seconds with AI. Free, open source Chrome extension using Claude, GPT-4, or Gemini.",
+                "inLanguage": "en-US"
+            },
+            {
+                "@type": "SoftwareApplication",
+                "@id": "https://tldw.nickdimoro.com/#softwareapplication",
+                "name": "TL;DW - YouTube Video Summarizer",
+                "description": "A free, open source Chrome extension that summarizes YouTube videos using AI. Get concise summaries, key revelations, and actionable takeaways in seconds using Claude, GPT-4, or Gemini.",
+                "url": "https://tldw.nickdimoro.com/",
+                "applicationCategory": "BrowserApplication",
+                "operatingSystem": "Chrome, Edge, Brave, Arc, Chromium",
+                "browserRequirements": "Requires Chrome or Chromium-based browser",
+                "softwareVersion": "1.0.0",
+                "offers": {
+                    "@type": "Offer",
+                    "price": "0",
+                    "priceCurrency": "USD"
+                },
+                "aggregateRating": {
+                    "@type": "AggregateRating",
+                    "ratingValue": "5",
+                    "ratingCount": "1",
+                    "bestRating": "5",
+                    "worstRating": "1"
+                },
+                "author": {
+                    "@id": "https://tldw.nickdimoro.com/#person"
+                },
+                "publisher": {
+                    "@id": "https://tldw.nickdimoro.com/#organization"
+                },
+                "downloadUrl": "https://github.com/ndimoro/youtube-summarizer/releases",
+                "screenshot": "https://tldw.nickdimoro.com/assets/product-screenshot.png",
+                "featureList": [
+                    "AI-powered YouTube video summarization",
+                    "Support for Claude, GPT-4, and Gemini",
+                    "Export to 5 note-taking apps: Obsidian, Capacities, Craft, Bear, and Logseq",
+                    "Privacy-focused - no data collection",
+                    "Open source MIT license",
+                    "Free to use"
+                ],
+                "keywords": "YouTube summarizer, video summary, AI summary, Chrome extension, Claude, GPT-4, Gemini"
+            },
+            {
+                "@type": "Person",
+                "@id": "https://tldw.nickdimoro.com/#person",
+                "name": "Nick DiMoro",
+                "url": "https://nickdimoro.com",
+                "sameAs": [
+                    "https://www.linkedin.com/in/ndimoro/",
+                    "https://www.facebook.com/nickdimoro/",
+                    "https://github.com/ndimoro"
+                ],
+                "jobTitle": "Founder",
+                "worksFor": {
+                    "@id": "https://tldw.nickdimoro.com/#organization"
+                }
+            },
+            {
+                "@type": "Organization",
+                "@id": "https://tldw.nickdimoro.com/#organization",
+                "name": "Mover Marketing AI",
+                "url": "https://movermarketing.ai",
+                "logo": "https://tldw.nickdimoro.com/assets/icon-128.png",
+                "founder": {
+                    "@id": "https://tldw.nickdimoro.com/#person"
+                },
+                "sameAs": [
+                    "https://movermarketing.ai"
+                ]
+            },
+            {
+                "@type": "BreadcrumbList",
+                "@id": "https://tldw.nickdimoro.com/#breadcrumb",
+                "itemListElement": [
+                    {
+                        "@type": "ListItem",
+                        "position": 1,
+                        "name": "Home",
+                        "item": "https://tldw.nickdimoro.com/"
+                    }
+                ]
+            },
+            {
+                "@type": "FAQPage",
+                "@id": "https://tldw.nickdimoro.com/#faq",
+                "mainEntity": [
+                    {
+                        "@type": "Question",
+                        "name": "Which videos can be summarized?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Any YouTube video with captions (auto-generated or manual). Most videos have captions."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "How long does it take?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Usually 3-10 seconds, depending on video length and AI provider response time."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "What's the maximum video length I can summarize?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "The limit depends on your AI provider and speaking speed. For above-average speaking speed (~170 words per minute): GPT-4 (OpenAI) ~9 hours, Claude Sonnet (Anthropic) ~15 hours, Gemini Flash (Google) ~75 hours. Most YouTube videos fall well within these limits."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Can I use this without a note-taking app?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Yes! Use the 'Copy' or 'Download' buttons to save summaries anywhere."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Which AI provider is best?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Claude (Anthropic) generally provides the best summaries, but all three work great. Try them and see what you prefer."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Does this work with YouTube Music or Shorts?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "It works with any YouTube video that has captions, including Shorts if they have captions."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Can I customize the summary format?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Each export integration has customization options. Click the gear icon to access settings."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Is my API key safe?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Yes. Your API key is stored locally on your device using Chrome's secure storage. It's never sent anywhere except directly to your chosen AI provider."
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+    </script>
+
+    <!-- Neo-Broadstreet Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* ═══════════════════════════════════════════════════════════════
+           NEO-BROADSTREET DESIGN SYSTEM
+           Editorial newspaper aesthetic with tech undertones
+           ═══════════════════════════════════════════════════════════════ */
+
+        :root {
+            /* Typography */
+            --font-display: 'Newsreader', 'Times New Roman', Georgia, serif;
+            --font-body: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', 'SF Mono', 'Consolas', monospace;
+
+            /* Colors - High Contrast Newspaper */
+            --color-bg: #fafaf9;
+            --color-surface: #ffffff;
+            --color-ink: #0f0f0f;
+            --color-ink-muted: #525252;
+            --color-ink-light: #737373;
+            --color-cream: #fef7ee;
+
+            /* Accent - Cyan Tech */
+            --color-accent: #0891b2;
+            --color-accent-bright: #06b6d4;
+            --color-accent-muted: #67e8f9;
+            --color-accent-bg: #ecfeff;
+
+            /* Rule Lines & Structure */
+            --color-rule: #e5e5e5;
+            --color-rule-dark: #d4d4d4;
+            --rule-thin: 1px;
+            --rule-thick: 2px;
+            --rule-heavy: 3px;
+
+            /* Shadows - Minimal Editorial */
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+            /* Spacing */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+            --space-3xl: 64px;
+            --space-4xl: 96px;
+
+            /* Transitions */
+            --transition-fast: 120ms ease;
+            --transition-smooth: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-editorial: 400ms cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        /* Reset */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--color-ink);
+            background: var(--color-bg);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            hyphens: none;
+            -webkit-hyphens: none;
+            -ms-hyphens: none;
+        }
+
+        /* Selection */
+        ::selection {
+            background: var(--color-accent-muted);
+            color: var(--color-ink);
+        }
+
+        /* Visually hidden (SEO + accessibility) */
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           MASTHEAD HEADER
+           ═══════════════════════════════════════════════════════════════ */
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: var(--color-surface);
+            border-bottom: var(--rule-thick) solid var(--color-ink);
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            right: 0;
+            height: var(--rule-thin);
+            background: var(--color-ink);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-md) var(--space-xl);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            text-decoration: none;
+            color: var(--color-ink);
+        }
+
+        .logo img {
+            width: 28px;
+            height: 28px;
+        }
+
+        .logo-text {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+
+        .site-tagline {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--color-ink-muted);
+            margin: 0;
+            margin-left: var(--space-sm);
+            padding-left: var(--space-sm);
+            border-left: var(--rule-thin) solid var(--color-rule);
+        }
+
+        .youtube-icon {
+            width: 18px;
+            height: 18px;
+            color: #FF0000;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: var(--space-xl);
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-ink-muted);
+            text-decoration: none;
+            transition: var(--transition-fast);
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: var(--rule-thin);
+            background: var(--color-accent);
+            transition: var(--transition-smooth);
+        }
+
+        .nav-links a:hover {
+            color: var(--color-ink);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: var(--rule-thin) solid var(--color-rule);
+            padding: var(--space-sm);
+            cursor: pointer;
+            color: var(--color-ink);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           HERO - FRONT PAGE ABOVE THE FOLD
+           ═══════════════════════════════════════════════════════════════ */
+
+        .hero {
+            padding: 140px var(--space-xl) var(--space-4xl);
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 100px;
+            left: var(--space-xl);
+            right: var(--space-xl);
+            height: var(--rule-thin);
+            background: var(--color-rule);
+        }
+
+        .edition-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-md) 0;
+            margin-bottom: var(--space-lg);
+            border-bottom: var(--rule-thin) solid var(--color-rule);
+        }
+
+        .edition-date {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-ink-light);
+        }
+
+        .edition-badge {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--color-accent);
+            padding: var(--space-xs) var(--space-sm);
+            border: var(--rule-thin) solid var(--color-accent);
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-3xl);
+            align-items: start;
+        }
+
+        .hero-main {
+            position: relative;
+        }
+
+        .category-label {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-accent);
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .category-label::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--color-accent);
+        }
+
+        h1,
+        .hero h2 {
+            font-family: var(--font-display);
+            font-size: 3.5rem;
+            font-weight: 600;
+            line-height: 1.05;
+            letter-spacing: -0.025em;
+            color: var(--color-ink);
+            margin-bottom: var(--space-lg);
+        }
+
+        .hero-deck {
+            font-family: var(--font-display);
+            font-size: 1.35rem;
+            font-weight: 400;
+            font-style: italic;
+            line-height: 1.5;
+            color: var(--color-ink-muted);
+            margin-bottom: var(--space-xl);
+            border-left: var(--rule-thick) solid var(--color-accent);
+            padding-left: var(--space-md);
+        }
+
+        .hero-lede {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--color-ink);
+            text-align: left;
+            hyphens: none;
+            margin-bottom: var(--space-xl);
+        }
+
+        .hero-lede::first-letter {
+            font-family: var(--font-display);
+            font-size: 4em;
+            font-weight: 600;
+            float: left;
+            line-height: 0.8;
+            margin-right: 0.1em;
+            margin-top: 0.05em;
+            color: var(--color-ink);
+        }
+
+        .cta-group {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-md) var(--space-xl);
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--color-ink);
+            color: var(--color-surface);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+            transition: left 0.4s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--color-accent);
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--color-ink);
+            border: var(--rule-thin) solid var(--color-ink);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-ink);
+            color: var(--color-surface);
+        }
+
+        .btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Chrome Web Store Badge */
+        .chrome-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-top: var(--space-lg);
+            padding: var(--space-sm) var(--space-md);
+            background: transparent;
+            border: var(--rule-thin) solid var(--color-rule);
+            text-decoration: none;
+            transition: var(--transition-smooth);
+            opacity: 0.7;
+        }
+
+        .chrome-badge:hover {
+            opacity: 1;
+            border-color: var(--color-ink-muted);
+            background: var(--color-cream);
+        }
+
+        .chrome-logo {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        .chrome-badge-text {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--color-ink-muted);
+        }
+
+        .chrome-badge:hover .chrome-badge-text {
+            color: var(--color-ink);
+        }
+
+        /* Hero Image Column - Editorial Spread */
+        .hero-visual {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-visual::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -100px;
+            right: -100px;
+            height: 1px;
+            background: var(--color-ink);
+            z-index: 0;
+        }
+
+        .hero-screenshot-wrapper {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xl);
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-screenshot {
+            max-width: 320px;
+            transform: rotate(-2deg);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+            background: var(--color-surface);
+        }
+
+        .hero-screenshot img {
+            width: 100%;
+            display: block;
+        }
+
+        .hero-pull-quote {
+            max-width: 200px;
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-style: italic;
+            color: var(--color-ink);
+            line-height: 1.5;
+            border-left: 3px solid var(--color-accent);
+            padding-left: var(--space-md);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           FEATURES - EDITORIAL COLUMNS
+           ═══════════════════════════════════════════════════════════════ */
+
+        .features {
+            background: var(--color-surface);
+            border-top: var(--rule-heavy) solid var(--color-ink);
+            border-bottom: var(--rule-heavy) solid var(--color-ink);
+            position: relative;
+        }
+
+        .features::before,
+        .features::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: var(--rule-thin);
+            background: var(--color-ink);
+        }
+
+        .features::before {
+            top: 4px;
+        }
+
+        .features::after {
+            bottom: 4px;
+        }
+
+        .features-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-3xl) var(--space-xl);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: var(--space-3xl);
+            position: relative;
+        }
+
+        .section-header::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: var(--rule-thick);
+            background: var(--color-accent);
+            margin: var(--space-lg) auto 0;
+        }
+
+        .section-eyebrow {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-accent);
+            margin-bottom: var(--space-sm);
+        }
+
+        .section-header h2 {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--color-ink);
+            margin-bottom: var(--space-md);
+        }
+
+        .section-header p {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-style: italic;
+            color: var(--color-ink-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0;
+            border: var(--rule-thin) solid var(--color-rule);
+        }
+
+        .feature-card {
+            padding: var(--space-xl);
+            border-right: var(--rule-thin) solid var(--color-rule);
+            border-bottom: var(--rule-thin) solid var(--color-rule);
+            background: var(--color-surface);
+            transition: var(--transition-editorial);
+            position: relative;
+        }
+
+        .feature-card:nth-child(3n) {
+            border-right: none;
+        }
+
+        .feature-card:nth-child(n+4) {
+            border-bottom: none;
+        }
+
+        .feature-card:hover {
+            background: var(--color-cream);
+        }
+
+        .feature-number {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            color: var(--color-accent);
+            margin-bottom: var(--space-md);
+        }
+
+        .feature-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.35rem;
+            font-weight: 500;
+            color: var(--color-ink);
+            margin-bottom: var(--space-sm);
+            line-height: 1.3;
+        }
+
+        .feature-card p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: var(--color-ink-muted);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           SCREENSHOTS - PHOTO SPREAD
+           ═══════════════════════════════════════════════════════════════ */
+
+        .screenshots {
+            padding: var(--space-4xl) var(--space-xl);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-lg);
+            margin-top: var(--space-3xl);
+        }
+
+        .screenshot-card {
+            background: var(--color-surface);
+            border: var(--rule-thin) solid var(--color-rule);
+            transition: var(--transition-editorial);
+        }
+
+        .screenshot-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        .screenshot-card img {
+            width: 100%;
+            display: block;
+            border-bottom: var(--rule-thin) solid var(--color-rule);
+        }
+
+        .screenshot-caption {
+            padding: var(--space-md);
+        }
+
+        .screenshot-caption h4 {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--color-ink);
+            margin-bottom: var(--space-xs);
+        }
+
+        .screenshot-caption p {
+            font-size: 0.85rem;
+            color: var(--color-ink-muted);
+            line-height: 1.6;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           HOW IT WORKS - STEP GUIDE
+           ═══════════════════════════════════════════════════════════════ */
+
+        .how-it-works {
+            background: var(--color-cream);
+            border-top: var(--rule-thin) solid var(--color-rule);
+            border-bottom: var(--rule-thin) solid var(--color-rule);
+            padding: var(--space-4xl) var(--space-xl);
+        }
+
+        .how-it-works-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-xl);
+            margin-top: var(--space-3xl);
+            position: relative;
+        }
+
+        .steps-grid::before {
+            content: '';
+            position: absolute;
+            top: 28px;
+            left: 60px;
+            right: 60px;
+            height: var(--rule-thin);
+            background: var(--color-rule-dark);
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 56px;
+            height: 56px;
+            background: var(--color-surface);
+            border: var(--rule-thick) solid var(--color-ink);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-lg);
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--color-ink);
+            position: relative;
+            z-index: 1;
+            transition: var(--transition-smooth);
+        }
+
+        .step:hover .step-number {
+            background: var(--color-accent);
+            border-color: var(--color-accent);
+            color: var(--color-surface);
+        }
+
+        .step h3 {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 500;
+            color: var(--color-ink);
+            margin-bottom: var(--space-sm);
+        }
+
+        .step p {
+            font-size: 0.9rem;
+            color: var(--color-ink-muted);
+            line-height: 1.6;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           INTEGRATIONS - NOTE-TAKING TOOLS
+           ═══════════════════════════════════════════════════════════════ */
+
+        .integrations {
+            padding: var(--space-4xl) var(--space-xl);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .integrations-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-3xl);
+            margin-top: var(--space-3xl);
+        }
+
+        .integrations-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-xl);
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .integration-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: var(--space-2xl) var(--space-xl);
+            background: var(--color-surface);
+            border: var(--rule-thin) solid var(--color-rule);
+            transition: var(--transition-editorial);
+            text-decoration: none;
+            color: var(--color-ink);
+        }
+
+        .integration-card:hover {
+            border-color: var(--color-ink);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        .integration-logo {
+            width: 64px;
+            height: 64px;
+            margin-bottom: var(--space-lg);
+        }
+
+        .integration-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: var(--space-sm);
+        }
+
+        .integration-card p {
+            font-size: 0.9rem;
+            color: var(--color-ink-muted);
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .integration-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            margin-top: var(--space-md);
+            padding: var(--space-xs) var(--space-sm);
+            background: var(--color-accent-bg);
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-accent);
+        }
+
+        .integrations-note {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--color-ink-muted);
+            text-align: center;
+            max-width: 500px;
+        }
+
+        @media (max-width: 900px) {
+            .integrations-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .integrations-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           PRICING - CLASSIFIED AD STYLE
+           ═══════════════════════════════════════════════════════════════ */
+
+        .pricing {
+            padding: var(--space-4xl) var(--space-xl);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .pricing-card {
+            background: var(--color-surface);
+            border: var(--rule-thick) solid var(--color-ink);
+            position: relative;
+            margin-top: var(--space-3xl);
+        }
+
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            right: 4px;
+            bottom: 4px;
+            border: var(--rule-thin) solid var(--color-ink);
+            pointer-events: none;
+        }
+
+        .pricing-header {
+            text-align: center;
+            padding: var(--space-xl);
+            border-bottom: var(--rule-thick) solid var(--color-ink);
+            position: relative;
+        }
+
+        .pricing-header::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: var(--space-xl);
+            right: var(--space-xl);
+            height: var(--rule-thin);
+            background: var(--color-ink);
+        }
+
+        .price {
+            font-family: var(--font-display);
+            font-size: 5rem;
+            font-weight: 700;
+            color: var(--color-ink);
+            line-height: 1;
+            margin-bottom: var(--space-sm);
+        }
+
+        .price-note {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-accent);
+        }
+
+        .pricing-body {
+            padding: var(--space-xl);
+        }
+
+        .pricing-features {
+            list-style: none;
+            columns: 2;
+            column-gap: var(--space-xl);
+        }
+
+        .pricing-features li {
+            position: relative;
+            padding: var(--space-sm) 0;
+            padding-left: var(--space-lg);
+            font-size: 0.95rem;
+            color: var(--color-ink);
+            break-inside: avoid;
+        }
+
+        .pricing-features li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 14px;
+            width: 8px;
+            height: 8px;
+            border: var(--rule-thin) solid var(--color-accent);
+            transform: rotate(45deg);
+        }
+
+        .pricing-footer {
+            padding: var(--space-lg) var(--space-xl);
+            background: var(--color-cream);
+            border-top: var(--rule-thin) solid var(--color-rule);
+            text-align: center;
+        }
+
+        .pricing-footer p {
+            font-size: 0.9rem;
+            color: var(--color-ink-muted);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           FAQ - QUESTIONS & ANSWERS
+           ═══════════════════════════════════════════════════════════════ */
+
+        .faq {
+            padding: var(--space-4xl) var(--space-xl);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .faq-inner {
+            position: relative;
+        }
+
+        .faq-list {
+            margin-top: var(--space-3xl);
+            border: var(--rule-thin) solid var(--color-rule);
+            background: var(--color-surface);
+        }
+
+        .faq-item {
+            border-bottom: var(--rule-thin) solid var(--color-rule);
+            transition: var(--transition-smooth);
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-item:hover {
+            background: var(--color-cream);
+        }
+
+        .faq-item[open] {
+            background: var(--color-cream);
+        }
+
+        .faq-item[open] .faq-indicator::before {
+            transform: rotate(90deg);
+        }
+
+        .faq-question {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-xl);
+            cursor: pointer;
+            list-style: none;
+            position: relative;
+            transition: var(--transition-smooth);
+        }
+
+        .faq-question::-webkit-details-marker {
+            display: none;
+        }
+
+        .faq-question::marker {
+            display: none;
+        }
+
+        .faq-number {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            color: var(--color-accent);
+            flex-shrink: 0;
+        }
+
+        .faq-question-text {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--color-ink);
+            line-height: 1.4;
+        }
+
+        .faq-indicator {
+            width: 24px;
+            height: 24px;
+            position: relative;
+            flex-shrink: 0;
+            transition: var(--transition-smooth);
+        }
+
+        .faq-indicator::before,
+        .faq-indicator::after {
+            content: '';
+            position: absolute;
+            background: var(--color-ink);
+            transition: var(--transition-smooth);
+        }
+
+        .faq-indicator::before {
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: var(--rule-thin);
+            transform: translateY(-50%);
+        }
+
+        .faq-indicator::after {
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: var(--rule-thin);
+            transform: translateX(-50%);
+            transition: var(--transition-smooth);
+        }
+
+        .faq-item[open] .faq-indicator::after {
+            opacity: 0;
+            transform: translateX(-50%) rotate(90deg);
+        }
+
+        .faq-answer {
+            padding: 0 var(--space-xl) var(--space-xl) var(--space-xl);
+            margin-left: calc(0.7rem + var(--space-md) * 2);
+            border-left: var(--rule-thick) solid var(--color-accent);
+            padding-left: var(--space-lg);
+            animation: fadeInAnswer 0.3s ease;
+        }
+
+        @keyframes fadeInAnswer {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .faq-answer p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--color-ink);
+            margin-bottom: var(--space-md);
+        }
+
+        .faq-answer p:last-child {
+            margin-bottom: 0;
+        }
+
+        .faq-limits {
+            list-style: none;
+            margin: var(--space-md) 0;
+            padding: 0;
+        }
+
+        .faq-limits li {
+            padding: var(--space-sm) 0;
+            font-size: 0.95rem;
+            color: var(--color-ink);
+            position: relative;
+            padding-left: var(--space-lg);
+        }
+
+        .faq-limits li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 14px;
+            width: 6px;
+            height: 6px;
+            background: var(--color-accent);
+        }
+
+        .faq-limits strong {
+            font-weight: 500;
+            color: var(--color-ink);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           CTA - CALL TO ACTION
+           ═══════════════════════════════════════════════════════════════ */
+
+        .cta-section {
+            background: var(--color-ink);
+            color: var(--color-surface);
+            padding: var(--space-4xl) var(--space-xl);
+            text-align: center;
+            position: relative;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: var(--space-md);
+            left: var(--space-md);
+            right: var(--space-md);
+            bottom: var(--space-md);
+            border: var(--rule-thin) solid rgba(255,255,255,0.2);
+            pointer-events: none;
+        }
+
+        .cta-content {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .cta-content h2 {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: var(--space-lg);
+        }
+
+        .cta-content p {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: var(--space-xl);
+            line-height: 1.7;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: var(--space-md);
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: var(--space-lg);
+        }
+
+        .btn-cta {
+            background: var(--color-accent);
+            color: var(--color-surface);
+        }
+
+        .btn-cta:hover {
+            background: var(--color-accent-bright);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--color-surface);
+            border: var(--rule-thin) solid rgba(255,255,255,0.4);
+        }
+
+        .btn-ghost:hover {
+            background: var(--color-surface);
+            color: var(--color-ink);
+        }
+
+        .cta-note {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           FOOTER - COLOPHON
+           ═══════════════════════════════════════════════════════════════ */
+
+        footer {
+            background: var(--color-surface);
+            border-top: var(--rule-heavy) solid var(--color-ink);
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 0;
+            right: 0;
+            height: var(--rule-thin);
+            background: var(--color-ink);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-3xl) var(--space-xl);
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: var(--space-3xl);
+        }
+
+        .footer-brand h4 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            margin-bottom: var(--space-md);
+        }
+
+        .footer-brand p {
+            font-size: 0.95rem;
+            color: var(--color-ink-muted);
+            line-height: 1.7;
+        }
+
+        .footer-section h5 {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-ink);
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-sm);
+            border-bottom: var(--rule-thin) solid var(--color-rule);
+        }
+
+        .footer-section a {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--color-ink-muted);
+            text-decoration: none;
+            padding: var(--space-xs) 0;
+            transition: var(--transition-fast);
+        }
+
+        .footer-section a:hover {
+            color: var(--color-accent);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-lg) var(--space-xl);
+            border-top: var(--rule-thin) solid var(--color-rule);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-bottom p {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.05em;
+            color: var(--color-ink-light);
+            text-transform: uppercase;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           ANIMATIONS
+           ═══════════════════════════════════════════════════════════════ */
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .hero-main,
+        .hero-visual {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero-visual {
+            animation-delay: 0.2s;
+            animation-fill-mode: both;
+        }
+
+        .feature-card {
+            animation: fadeInUp 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .feature-card:nth-child(1) { animation-delay: 0.1s; }
+        .feature-card:nth-child(2) { animation-delay: 0.15s; }
+        .feature-card:nth-child(3) { animation-delay: 0.2s; }
+        .feature-card:nth-child(4) { animation-delay: 0.25s; }
+        .feature-card:nth-child(5) { animation-delay: 0.3s; }
+        .feature-card:nth-child(6) { animation-delay: 0.35s; }
+
+        /* ═══════════════════════════════════════════════════════════════
+           RESPONSIVE
+           ═══════════════════════════════════════════════════════════════ */
+
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: var(--space-xl);
+            }
+
+            .hero-visual::before {
+                left: 0;
+                right: 0;
+            }
+
+            .hero-screenshot-wrapper {
+                flex-direction: column;
+                gap: var(--space-lg);
+            }
+
+            .hero-screenshot {
+                max-width: 280px;
+            }
+
+            .hero-pull-quote {
+                max-width: 100%;
+                text-align: center;
+                border-left: none;
+                border-top: 3px solid var(--color-accent);
+                padding-left: 0;
+                padding-top: var(--space-md);
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .feature-card:nth-child(2n) {
+                border-right: none;
+            }
+
+            .feature-card:nth-child(n+5) {
+                border-bottom: none;
+            }
+
+            .screenshots-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--space-xl);
+            }
+
+            .steps-grid::before {
+                display: none;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .nav-links.active {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--color-surface);
+                padding: var(--space-lg);
+                border-bottom: var(--rule-thick) solid var(--color-ink);
+                gap: var(--space-md);
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .site-tagline {
+                display: none;
+            }
+
+            h1,
+            .hero h2 {
+                font-size: 2.5rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-card {
+                border-right: none !important;
+                border-bottom: var(--rule-thin) solid var(--color-rule) !important;
+            }
+
+            .feature-card:last-child {
+                border-bottom: none !important;
+            }
+
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-features {
+                columns: 1;
+            }
+
+            .faq-question {
+                grid-template-columns: auto 1fr auto;
+                padding: var(--space-lg);
+            }
+
+            .faq-question-text {
+                font-size: 1.1rem;
+            }
+
+            .faq-answer {
+                margin-left: 0;
+                padding: 0 var(--space-lg) var(--space-lg) var(--space-lg);
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: var(--space-xl);
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: var(--space-md);
+                text-align: center;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn {
+                justify-content: center;
+            }
+
+            .chrome-badge {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            :root {
+                font-size: 15px;
+            }
+
+            h1,
+            .hero h2 {
+                font-size: 2rem;
+            }
+
+            .section-header h2 {
+                font-size: 1.75rem;
+            }
+
+            .hero {
+                padding: 120px var(--space-md) var(--space-2xl);
+            }
+
+            .hero::before {
+                left: var(--space-md);
+                right: var(--space-md);
+            }
+
+            .edition-line {
+                flex-direction: column;
+                gap: var(--space-sm);
+                text-align: center;
+            }
+
+            .hero-lede::first-letter {
+                font-size: 3em;
+            }
+
+            .price {
+                font-size: 3.5rem;
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           PRINT STYLES
+           ═══════════════════════════════════════════════════════════════ */
+
+        @media print {
+            header, .cta-section, footer {
+                display: none;
+            }
+
+            body {
+                background: white;
+            }
+
+            .hero {
+                padding-top: var(--space-xl);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Masthead Header -->
+    <header>
+        <nav>
+            <a href="#" class="logo">
+                <img src="./assets/logo.svg" alt="TL;DW">
+                <span class="logo-text">TL;DW</span>
+            </a>
+            <h1 class="site-tagline">
+                <svg class="youtube-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+                YouTube AI Summarizer
+            </h1>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#integrations">Integrations</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="https://github.com/ndimoro/youtube-summarizer" target="_blank">GitHub</a></li>
+            </ul>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Hero - Front Page -->
+    <section class="hero">
+        <div class="edition-line">
+            <span class="edition-badge">100% Free & Open Source</span>
+        </div>
+
+        <div class="hero-content">
+            <div class="hero-main">
+                <div class="category-label">YouTube Summarizer</div>
+                <h2>Millions of Videos.<br>Most Say Nothing.</h2>
+                <p class="hero-deck">The feed is infinite. Your attention is not. Find signal in the noise.</p>
+                <p class="hero-lede">Every hour, 500 hours of video are uploaded. The algorithm thrives on your uncertainty, keeping you watching "just in case." This is the antidote. One click distills any video to its essence. Know in seconds if it deserves your time. Your API key, your privacy, about a penny per video.</p>
+                <div class="cta-group">
+                    <a href="https://github.com/ndimoro/youtube-summarizer#installation" target="_blank" class="btn btn-primary">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        Install Free
+                    </a>
+                    <a href="https://github.com/ndimoro/youtube-summarizer" target="_blank" class="btn btn-secondary">
+                        <svg fill="currentColor" viewBox="0 0 24 24" width="14" height="14">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        View Source
+                    </a>
+                </div>
+                <a href="#install" class="chrome-badge">
+                    <svg class="chrome-logo" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" fill="#fff"/>
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="#4285F4"/>
+                        <path d="M12 2v6.5l5.63 3.25L22 12c0-5.52-4.48-10-10-10z" fill="#EA4335"/>
+                        <path d="M12 8.5L6.37 11.75 2 12c0 5.52 4.48 10 10 10v-6.5L12 8.5z" fill="#34A853"/>
+                        <path d="M12 8.5v7l5.63-3.25L12 8.5z" fill="#FBBC05"/>
+                        <circle cx="12" cy="12" r="4" fill="#fff"/>
+                        <circle cx="12" cy="12" r="3.2" fill="#4285F4"/>
+                    </svg>
+                    <span class="chrome-badge-text">Coming Soon to Chrome Web Store</span>
+                </a>
+            </div>
+
+            <div class="hero-visual">
+                <div class="hero-screenshot-wrapper">
+                    <div class="hero-screenshot">
+                        <img src="./assets/product-screenshot.png" alt="TL;DW Summary View">
+                    </div>
+                    <blockquote class="hero-pull-quote">"Know in seconds if it deserves your time."</blockquote>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="features-inner">
+            <div class="section-header">
+                <div class="section-eyebrow">Capabilities</div>
+                <h2>Order From Chaos</h2>
+                <p>The essential. Nothing superfluous.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-number">01</div>
+                    <h3>Distillation</h3>
+                    <p>Hours reduced to minutes. Know if content deserves your attention before you give it.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-number">02</div>
+                    <h3>Discernment</h3>
+                    <p>The insights that matter, surfaced. Skip the filler, the tangents, the sponsored segments.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-number">03</div>
+                    <h3>Preservation</h3>
+                    <p>Export to 5 note-taking apps with one click. Obsidian, Capacities, Craft, Bear, Logseq.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-number">04</div>
+                    <h3>Choice</h3>
+                    <p>Claude, GPT-4, or Gemini. Your preferred model. Your API key. No intermediary.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-number">05</div>
+                    <h3>Sovereignty</h3>
+                    <p>No accounts. No tracking. Keys stored locally. Your data never leaves your machine.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-number">06</div>
+                    <h3>Transparency</h3>
+                    <p>MIT licensed. Every line readable. No black boxes. No hidden agendas.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screenshots Section -->
+    <section class="screenshots" id="screenshots">
+        <div class="section-header">
+            <div class="section-eyebrow">Interface</div>
+            <h2>Clarity By Design</h2>
+            <p>No visual clutter. No decision fatigue. Just information.</p>
+        </div>
+
+        <div class="screenshots-grid">
+            <div class="screenshot-card">
+                <img src="./assets/screenshot-1.png" alt="Extension popup showing AI-generated summary" loading="lazy">
+                <div class="screenshot-caption">
+                    <h4>Summaries</h4>
+                    <p>One click. Instant results.</p>
+                </div>
+            </div>
+
+            <div class="screenshot-card">
+                <img src="./assets/screenshot-2.png" alt="Settings and configuration page" loading="lazy">
+                <div class="screenshot-caption">
+                    <h4>Setup</h4>
+                    <p>Pick provider. Paste key. Done.</p>
+                </div>
+            </div>
+
+            <div class="screenshot-card">
+                <img src="./assets/screenshot-3.png" alt="Export options to various formats" loading="lazy">
+                <div class="screenshot-caption">
+                    <h4>Export</h4>
+                    <p>Five integrations. One click.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="how-it-works-inner">
+            <div class="section-header">
+                <div class="section-eyebrow">Setup</div>
+                <h2>Simplicity Is Deliberate</h2>
+                <p>Complexity is easy. Simplicity takes discipline.</p>
+            </div>
+
+            <div class="steps-grid">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Install</h3>
+                    <p>Add to Chrome. One click.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Configure</h3>
+                    <p>Pick AI. Paste key.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Analyze</h3>
+                    <p>Open video. Click icon.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Read</h3>
+                    <p>Summary. Insights. Done.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Integrations Section -->
+    <section class="integrations" id="integrations">
+        <div class="section-header">
+            <div class="section-eyebrow">Works With</div>
+            <h2>Your Knowledge System</h2>
+            <p>Export directly to your favorite note-taking tools. One click.</p>
+        </div>
+
+        <div class="integrations-content">
+            <div class="integrations-grid">
+                <a href="https://obsidian.md" target="_blank" rel="noopener" class="integration-card">
+                    <img src="./assets/obsidian.svg" alt="Obsidian" class="integration-logo">
+                    <h3>Obsidian</h3>
+                    <p>Opens app directly with video thumbnail, frontmatter, and callout formatting.</p>
+                    <span class="integration-badge">Opens Directly</span>
+                </a>
+
+                <a href="https://capacities.io" target="_blank" rel="noopener" class="integration-card">
+                    <svg class="integration-logo" viewBox="7.12 7.3 63.41 63.41" fill="none">
+                        <circle cx="38.8209" cy="39" r="13.45" transform="rotate(-15 38.8209 39)" fill="#000"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M54.7914 66.0811C54.6942 66.3374 54.5105 66.5518 54.271 66.6852C52.0346 67.9311 49.6099 68.9243 47.0245 69.617C30.1152 74.1478 12.7346 64.1131 8.20379 47.2038C3.67296 30.2946 13.7077 12.9139 30.6169 8.38311C33.2023 7.69037 35.7987 7.33813 38.3584 7.2989C38.6325 7.29469 38.8988 7.38849 39.1111 7.56192C41.8794 9.82347 44.4239 12.3787 46.6916 15.197C47.4731 16.1681 46.2983 17.5912 45.101 17.2444C41.2693 16.1343 37.0954 16.023 32.9609 17.1308C20.8828 20.3671 13.7152 32.7819 16.9515 44.8599C20.1878 56.938 32.6025 64.1056 44.6806 60.8693C48.8151 59.7615 52.3742 57.5781 55.1375 54.7009C56.001 53.8018 57.7299 54.4469 57.5387 55.6787C56.9839 59.2532 56.058 62.7384 54.7914 66.0811ZM65.4625 56.1737C64.7914 57.2153 63.3044 56.5354 63.4669 55.307C64.4343 47.9938 64.0074 40.3692 61.9779 32.7952C59.9484 25.2211 56.5058 18.4044 52.0114 12.5547C51.2565 11.5722 52.2043 10.2398 53.3063 10.8064C60.9824 14.7532 67.0278 21.8023 69.4377 30.7963C71.8476 39.7902 70.1368 48.9176 65.4625 56.1737Z" fill="#000"/>
+                    </svg>
+                    <h3>Capacities</h3>
+                    <p>Opens app directly with YAML frontmatter, wikilinks, and custom tags.</p>
+                    <span class="integration-badge">Opens Directly</span>
+                </a>
+
+                <a href="https://craft.do" target="_blank" rel="noopener" class="integration-card">
+                    <img src="./assets/craft.png" alt="Craft" class="integration-logo">
+                    <h3>Craft</h3>
+                    <p>Opens app directly with rich metadata and video thumbnail support.</p>
+                    <span class="integration-badge">Opens Directly</span>
+                </a>
+
+                <a href="https://bear.app" target="_blank" rel="noopener" class="integration-card">
+                    <img src="./assets/bear.png" alt="Bear" class="integration-logo">
+                    <h3>Bear</h3>
+                    <p>Opens app directly with tags, pinning options, and thumbnail display.</p>
+                    <span class="integration-badge">Opens Directly</span>
+                </a>
+
+                <a href="https://logseq.com" target="_blank" rel="noopener" class="integration-card">
+                    <svg class="integration-logo" viewBox="0 0 24 24">
+                        <path fill="#002B36" d="M19.3 9.838c-2.677-1.366-5.467-1.56-8.316-.607-1.738.58-3.197 1.58-4.267 3.088-1.031 1.452-1.45 3.071-1.184 4.837.268 1.781 1.164 3.228 2.505 4.4C9.96 23.231 12.24 23.942 15.092 24c.41-.053 1.157-.103 1.883-.255 2.004-.418 3.754-1.325 5.08-2.915 1.621-1.942 2.108-4.148 1.272-6.562-.704-2.034-2.138-3.467-4.027-4.43ZM7.515 6.295c.507-2.162-.88-4.664-2.988-5.37-1.106-.37-2.156-.267-3.075.492C.61 2.114.294 3.064.271 4.146c.009.135.016.285.029.435.01.102.021.205.042.305.351 1.703 1.262 2.98 2.9 3.636 1.912.766 3.808-.244 4.273-2.227Zm4.064-1.146c1.075.377 2.152.31 3.22-.033.94-.3 1.755-.793 2.341-1.609.803-1.117.5-2.387-.717-3.027-.6-.317-1.246-.438-1.927-.48-.47.076-.95.117-1.41.234-1.068.27-2.002.781-2.653 1.7-.495.697-.64 1.45-.174 2.227.303.504.779.799 1.32.988Z"/>
+                    </svg>
+                    <h3>Logseq</h3>
+                    <p>Copy to clipboard with block-based formatting and page properties.</p>
+                    <span class="integration-badge">Copy to Clipboard</span>
+                </a>
+            </div>
+
+            <p class="integrations-note">All exports include video metadata, thumbnails, and properly formatted markdown. Plus standard Copy and Download options.</p>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="section-header">
+            <div class="section-eyebrow">Cost</div>
+            <h2>No Middleman</h2>
+            <p>Free tool. You pay the AI directly. Honest economics.</p>
+        </div>
+
+        <div class="pricing-card">
+            <div class="pricing-header">
+                <div class="price">$0</div>
+                <div class="price-note">Extension cost: Zero. API cost: ~1 cent per video.</div>
+            </div>
+            <div class="pricing-body">
+                <ul class="pricing-features">
+                    <li>Unlimited use</li>
+                    <li>All AI providers</li>
+                    <li>All export formats</li>
+                    <li>No ads</li>
+                    <li>No tracking</li>
+                    <li>No account</li>
+                    <li>No data collection</li>
+                    <li>Full source code</li>
+                </ul>
+            </div>
+            <div class="pricing-footer">
+                <p>Direct relationship with your AI provider. No rent-seeking. No markup.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq" id="faq">
+        <div class="faq-inner">
+            <div class="section-header">
+                <div class="section-eyebrow">Questions</div>
+                <h2>Frequently Asked</h2>
+                <p>Common inquiries. Direct answers.</p>
+            </div>
+
+            <div class="faq-list">
+                <details class="faq-item">
+                    <summary class="faq-question">
+                        <span class="faq-number">01</span>
+                        <span class="faq-question-text">Which videos can be summarized?</span>
+                        <span class="faq-indicator"></span>
+                    </summary>
+                    <div class="faq-answer">
+                        <p>Any YouTube video with captions (auto-generated or manual). Most videos have captions.</p>
+                    </div>
+                </details>
+
+                <details class="faq-item">
+                    <summary class="faq-question">
+                        <span class="faq-number">02</span>
+                        <span class="faq-question-text">How long does it take?</span>
+                        <span class="faq-indicator"></span>
+                    </summary>
+                    <div class="faq-answer">
+                        <p>Usually 3-10 seconds, depending on video length and AI provider response time.</p>
+                    </div>
+                </details>
+
+                <details class="faq-item">
+                    <summary class="faq-question">
+                        <span class="faq-number">03</span>
+                        <span class="faq-question-text">What's the maximum video length I can summarize?</span>
+                        <span class="faq-indicator"></span>
+                    </summary>
+                    <div class="faq-answer">
+                        <p>The limit depends on your AI provider and speaking speed. For above-average speaking speed (~170 words per minute):</p>
+                        <ul class="faq-limits">
+                            <li><strong>GPT-4 (OpenAI):</strong> ~9 hours</li>
+                            <li><strong>Claude Sonnet (Anthropic):</strong> ~15 hours</li>
+                            <li><strong>Gemini Flash (Google):</strong> ~75 hours</li>
+                        </ul>
+                        <p>Most YouTube videos fall well within these limits. Longer videos may take slightly more time to process.</p>
+                    </div>
+                </details>
+
+                <details class="faq-item">
+                    <summary class="faq-question">
+                        <span class="faq-number">04</span>
+                        <span class="faq-question-text">Can I use this without a note-taking app?</span>
+                        <span class="faq-indicator"></span>
+                    </summary>
+                    <div class="faq-answer">
+                        <p>Yes! Use the "Copy" or "Download" buttons to save summaries anywhere.</p>
+                    </div>
+                </details>
+
+                <details class="faq-item">
+                    <summary class="faq-question">
+                        <span class="faq-number">05</span>
+                        <span class="faq-question-text">Which AI provider is best?</span>
+                        <span class="faq-indicator"></span>
+                    </summary>
+                    <div class="faq-answer">
+                        <p>Claude (Anthropic) generally provides the best summaries, but all three work great. Try them and see what you prefer.</p>
+                    </div>
+                </details>
+
+                <details class="faq-item">
+                    <summary class="faq-question">
+                        <span class="faq-number">06</span>
+                        <span class="faq-question-text">Does this work with YouTube Music or Shorts?</span>
+                        <span class="faq-indicator"></span>
+                    </summary>
+                    <div class="faq-answer">
+                        <p>It works with any YouTube video that has captions, including Shorts if they have captions.</p>
+                    </div>
+                </details>
+
+                <details class="faq-item">
+                    <summary class="faq-question">
+                        <span class="faq-number">07</span>
+                        <span class="faq-question-text">Can I customize the summary format?</span>
+                        <span class="faq-indicator"></span>
+                    </summary>
+                    <div class="faq-answer">
+                        <p>Each export integration has customization options. Click the gear icon to access settings.</p>
+                    </div>
+                </details>
+
+                <details class="faq-item">
+                    <summary class="faq-question">
+                        <span class="faq-number">08</span>
+                        <span class="faq-question-text">Is my API key safe?</span>
+                        <span class="faq-indicator"></span>
+                    </summary>
+                    <div class="faq-answer">
+                        <p>Yes. Your API key is stored locally on your device using Chrome's secure storage. It's never sent anywhere except directly to your chosen AI provider.</p>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="install">
+        <div class="cta-content">
+            <h2>Reclaim Your Attention</h2>
+            <p>The infinite scroll wins when you can't distinguish signal from noise. This levels the field.</p>
+            <div class="cta-buttons">
+                <a href="https://github.com/ndimoro/youtube-summarizer#installation" target="_blank" class="btn btn-cta">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="14" height="14">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    Install Now
+                </a>
+                <a href="https://github.com/ndimoro/youtube-summarizer" target="_blank" class="btn btn-ghost">
+                    View Source
+                </a>
+            </div>
+            <p class="cta-note">Chrome, Edge, Brave, Arc, and all Chromium browsers</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h4>TL;DW</h4>
+                <p>A tool for those who value their attention. Open source. No subscriptions. No surveillance.</p>
+            </div>
+
+            <div class="footer-section">
+                <h5>Product</h5>
+                <a href="#features">Features</a>
+                <a href="#screenshots">Screenshots</a>
+                <a href="#how-it-works">Setup</a>
+                <a href="#integrations">Integrations</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#faq">FAQ</a>
+            </div>
+
+            <div class="footer-section">
+                <h5>Resources</h5>
+                <a href="https://github.com/ndimoro/youtube-summarizer" target="_blank">GitHub</a>
+                <a href="https://github.com/ndimoro/youtube-summarizer#installation" target="_blank">Install</a>
+                <a href="https://github.com/ndimoro/youtube-summarizer/issues" target="_blank">Issues</a>
+                <a href="https://github.com/ndimoro/youtube-summarizer/blob/main/LICENSE" target="_blank">License</a>
+            </div>
+
+            <div class="footer-section">
+                <h5>Legal</h5>
+                <a href="mailto:support@tldw.movermarketing.ai">Contact</a>
+                <a href="./privacy.html">Privacy</a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2025 TL;DW. MIT License. Built by <a href="https://nickdimoro.com" target="_blank" rel="noopener" style="color: var(--color-ink-light); text-decoration: underline;">Nick DiMoro</a></p>
+            <p>A <a href="https://movermarketing.ai" target="_blank" rel="noopener" style="color: var(--color-ink-light); text-decoration: underline;">Mover Marketing AI</a> Project</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking a link
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for scroll animation
+        document.querySelectorAll('.feature-card, .screenshot-card, .step, .integration-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
