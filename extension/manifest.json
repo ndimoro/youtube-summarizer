@@ -4,7 +4,7 @@
   "short_name": "TL;DW",
   "version": "1.2.0",
   "version_name": "1.2.0",
-  "description": "AI-powered YouTube video summaries. Get key insights, revelations, and takeaways in seconds. Supports Claude, GPT-4, and Gemini. Requires your own API key.",
+  "description": "AI-powered YouTube summaries. Get insights & takeaways instantly. Supports Claude, GPT-4, Gemini. Free with your API key.",
   "author": "Nick DiMoro",
   "homepage_url": "https://github.com/ndimoro/tldw-youtube-summarizer",
   "minimum_chrome_version": "88",
