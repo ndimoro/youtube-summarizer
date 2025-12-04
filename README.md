@@ -56,11 +56,15 @@ All exports include:
 ### Manual Installation
 
 1. Download the [latest release](https://github.com/ndimoro/youtube-summarizer/releases/latest)
-2. Unzip the file
-3. Open Chrome and go to `chrome://extensions/`
-4. Enable "Developer mode" (top right)
-5. Click "Load unpacked"
-6. Select the `extension` folder
+2. Unzip the downloaded file
+3. **Important:** Inside the unzipped folder, locate the `extension` folder
+   - The download contains the full repository
+   - You only need the `extension` folder for Chrome
+   - Path will look like: `youtube-summarizer-1.2.0/extension/`
+4. Open Chrome and go to `chrome://extensions/`
+5. Enable "Developer mode" (toggle in top right corner)
+6. Click "Load unpacked" button
+7. Navigate to and select the `extension` folder (from step 3)
 
 ## Setup
 
