@@ -1,5 +1,6 @@
 # TL;DW - YouTube Video Summarizer
 
+[![Chrome Web Store](https://img.shields.io/badge/Chrome%20Web%20Store-Install-blue?logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/cffkpcdkahobjihhgkikjonlehehoijk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub release](https://img.shields.io/github/v/release/ndimoro/youtube-summarizer)](https://github.com/ndimoro/youtube-summarizer/releases)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/ndimoro/youtube-summarizer/pulls)
@@ -50,8 +51,11 @@ All exports include:
 
 ## Installation
 
-### From Chrome Web Store
-*(Coming soon)*
+### From Chrome Web Store (Recommended)
+
+1. Visit the [Chrome Web Store listing](https://chromewebstore.google.com/detail/cffkpcdkahobjihhgkikjonlehehoijk)
+2. Click "Add to Chrome"
+3. Done! Click the extension icon to get started
 
 ### Manual Installation
 
