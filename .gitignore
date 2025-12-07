@@ -37,6 +37,7 @@ temp/
 # Local development files (not for public repo)
 store-assets/
 prompts/
+scripts/
 branding.md
 chrome-store-submission/
 PLAN.md
@@ -48,3 +49,8 @@ TESTING_CHECKLIST.md
 INSTALLATION.md
 IMPLEMENTATION_PLAN.md
 *.zip
+
+# SEO and strategy reports
+*-report.md
+seo-audit-report.md
+competitive-content-strategy-report.md
