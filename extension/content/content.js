@@ -12,7 +12,48 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       });
     return true;
   }
+
+  if (request.action === 'ping') {
+    sendResponse({ success: true });
+    return;
+  }
+
+  if (request.action === 'triggerCaptions') {
+    // Trigger YouTube's player to load captions, which generates an authenticated
+    // timedtext request that the background service worker can capture via webRequest
+    triggerCaptionLoading()
+      .then(() => sendResponse({ success: true }))
+      .catch(() => sendResponse({ success: false }));
+    return true;
+  }
 });
+
+async function triggerCaptionLoading() {
+  // Inject into the page's main world to access YouTube's player API
+  const script = document.createElement('script');
+  script.textContent = `
+    (function() {
+      try {
+        var player = document.getElementById('movie_player');
+        if (player && player.loadModule) {
+          player.loadModule('captions');
+          // Try to set an English caption track
+          var tracks = player.getPlayerResponse &&
+            player.getPlayerResponse()?.captions?.playerCaptionsTracklistRenderer?.captionTracks;
+          if (tracks && tracks.length > 0) {
+            var enTrack = tracks.find(function(t) { return t.languageCode === 'en'; }) || tracks[0];
+            player.setOption('captions', 'track', { languageCode: enTrack.languageCode });
+          }
+        }
+      } catch(e) {}
+    })();
+  `;
+  document.documentElement.appendChild(script);
+  script.remove();
+
+  // Wait a moment for the request to be made
+  await new Promise(resolve => setTimeout(resolve, 2000));
+}
 
 async function handleTranscriptRequest() {
   try {
@@ -253,13 +294,70 @@ async function getTranscript() {
   const videoId = getVideoId();
   if (!videoId) return null;
 
+  // Method 1: Try extracting from ytInitialPlayerResponse (available in page context)
+  const transcriptFromPlayerResponse = await extractFromPlayerResponse();
+  if (transcriptFromPlayerResponse) return transcriptFromPlayerResponse;
+
+  // Method 2: Try Innertube API (may fail due to PO token requirements)
   const transcriptFromApi = await fetchTranscriptViaInnertubeApi(videoId);
   if (transcriptFromApi) return transcriptFromApi;
 
+  // Method 3: Try extracting caption URLs from page scripts
   const transcriptFromPage = await extractFromPageScripts();
   if (transcriptFromPage) return transcriptFromPage;
 
   return null;
+}
+
+async function extractFromPlayerResponse() {
+  try {
+    // Access ytInitialPlayerResponse from the page's main world
+    // Content scripts run in an isolated world, so we need to inject a script
+    // to read the variable and pass it back
+    const captionData = await new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.textContent = `
+        (function() {
+          try {
+            const tracks = window.ytInitialPlayerResponse?.captions?.playerCaptionsTracklistRenderer?.captionTracks;
+            if (tracks && tracks.length > 0) {
+              let track = tracks.find(t => t.languageCode === 'en' && t.kind !== 'asr');
+              if (!track) track = tracks.find(t => t.languageCode === 'en');
+              if (!track) track = tracks[0];
+              if (track?.baseUrl) {
+                document.dispatchEvent(new CustomEvent('__yt_caption_data', {
+                  detail: { baseUrl: track.baseUrl }
+                }));
+                return;
+              }
+            }
+          } catch(e) {}
+          document.dispatchEvent(new CustomEvent('__yt_caption_data', { detail: null }));
+        })();
+      `;
+
+      const handler = (event) => {
+        document.removeEventListener('__yt_caption_data', handler);
+        resolve(event.detail);
+      };
+      document.addEventListener('__yt_caption_data', handler);
+
+      document.documentElement.appendChild(script);
+      script.remove();
+
+      // Timeout after 1 second
+      setTimeout(() => {
+        document.removeEventListener('__yt_caption_data', handler);
+        resolve(null);
+      }, 1000);
+    });
+
+    if (!captionData?.baseUrl) return null;
+
+    return await fetchCaptionContent(captionData.baseUrl);
+  } catch (error) {
+    return null;
+  }
 }
 
 async function fetchTranscriptViaInnertubeApi(videoId) {
@@ -382,9 +480,10 @@ async function extractFromPageScripts() {
       const text = script.textContent || '';
 
       if (text.includes('captionTracks')) {
-        const baseUrlMatch = text.match(/"baseUrl"\s*:\s*"([^"]+)"/);
-        if (baseUrlMatch) {
-          let url = baseUrlMatch[1];
+        // Find ALL baseUrl matches and pick one that contains 'timedtext'
+        const allMatches = [...text.matchAll(/"baseUrl"\s*:\s*"([^"]+)"/g)];
+        for (const match of allMatches) {
+          let url = match[1];
           url = url.replace(/\\u0026/g, '&').replace(/\\\//g, '/');
 
           if (url.includes('timedtext')) {

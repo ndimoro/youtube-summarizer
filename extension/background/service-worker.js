@@ -68,6 +68,203 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
+// === Transcript fetching via webRequest capture ===
+// YouTube now requires PO (Proof of Origin) tokens for timedtext/caption requests.
+// The PO token is generated dynamically by YouTube's BotGuard and is included
+// in the player's caption requests. We capture these authenticated URLs via
+// chrome.webRequest and re-fetch them from the background service worker.
+
+// Store captured timedtext URLs keyed by videoId
+const capturedTimedtextUrls = new Map();
+
+// Listen for timedtext requests made by YouTube's player
+chrome.webRequest.onCompleted.addListener(
+  (details) => {
+    if (details.statusCode === 200) {
+      const url = new URL(details.url);
+      const videoId = url.searchParams.get('v');
+      if (videoId) {
+        // Store the URL, preferring English tracks
+        const lang = url.searchParams.get('lang') || '';
+        const existing = capturedTimedtextUrls.get(videoId);
+        if (!existing || lang === 'en' || (!existing.lang?.startsWith('en') && lang.startsWith('en'))) {
+          capturedTimedtextUrls.set(videoId, {
+            url: details.url,
+            lang,
+            capturedAt: Date.now()
+          });
+        }
+      }
+    }
+  },
+  { urls: ['https://www.youtube.com/api/timedtext*'] }
+);
+
+// Primary method: Use captured timedtext URL from webRequest
+async function fetchTranscriptViaCapturedUrl(videoId) {
+  const captured = capturedTimedtextUrls.get(videoId);
+  if (!captured) return null;
+
+  // Check if URL is expired (URLs typically expire after ~6 hours)
+  const age = Date.now() - captured.capturedAt;
+  if (age > 5 * 60 * 60 * 1000) {
+    capturedTimedtextUrls.delete(videoId);
+    return null;
+  }
+
+  // Ensure we're requesting JSON format
+  let captionUrl = captured.url;
+  if (!captionUrl.includes('fmt=json3')) {
+    captionUrl = captionUrl.replace(/&fmt=[^&]*/, '') + '&fmt=json3';
+  }
+
+  return await fetchAndParseCaptions(captionUrl);
+}
+
+// Fallback method: Ask the content script to trigger caption loading,
+// then wait for the webRequest listener to capture the URL
+async function fetchTranscriptByTriggeringPlayer(videoId, tabId) {
+  // Ask content script to trigger caption loading via the player API
+  try {
+    await chrome.tabs.sendMessage(tabId, { action: 'triggerCaptions' });
+  } catch (e) {
+    return null;
+  }
+
+  // Wait up to 8 seconds for the webRequest listener to capture a timedtext URL
+  for (let i = 0; i < 16; i++) {
+    await new Promise(r => setTimeout(r, 500));
+    const captured = capturedTimedtextUrls.get(videoId);
+    if (captured) {
+      let captionUrl = captured.url;
+      if (!captionUrl.includes('fmt=json3')) {
+        captionUrl = captionUrl.replace(/&fmt=[^&]*/, '') + '&fmt=json3';
+      }
+      return await fetchAndParseCaptions(captionUrl);
+    }
+  }
+
+  return null;
+}
+
+// Fallback method: Fetch transcript by scraping the watch page HTML anonymously
+async function fetchTranscriptFromHtml(videoId) {
+  const pageResponse = await fetch(`https://www.youtube.com/watch?v=${videoId}`, {
+    credentials: 'omit',
+    headers: { 'Accept-Language': 'en-US,en;q=0.9' }
+  });
+
+  if (!pageResponse.ok) return null;
+
+  const html = await pageResponse.text();
+  if (html.includes('consent.youtube.com')) return null;
+
+  // Extract ytInitialPlayerResponse using brace-matching
+  const marker = 'var ytInitialPlayerResponse = ';
+  const startIdx = html.indexOf(marker);
+  if (startIdx === -1) return null;
+
+  const jsonStart = startIdx + marker.length;
+  let braceCount = 0;
+  let jsonEnd = jsonStart;
+  for (let i = jsonStart; i < html.length; i++) {
+    if (html[i] === '{') braceCount++;
+    else if (html[i] === '}') braceCount--;
+    if (braceCount === 0) { jsonEnd = i + 1; break; }
+  }
+
+  let playerResponse;
+  try { playerResponse = JSON.parse(html.substring(jsonStart, jsonEnd)); }
+  catch (e) { return null; }
+
+  if (playerResponse?.playabilityStatus?.status !== 'OK') return null;
+
+  const captionTracks = playerResponse?.captions?.playerCaptionsTracklistRenderer?.captionTracks;
+  if (!captionTracks || captionTracks.length === 0) return null;
+
+  let track = captionTracks.find(t => t.languageCode === 'en' && t.kind !== 'asr');
+  if (!track) track = captionTracks.find(t => t.languageCode === 'en');
+  if (!track) track = captionTracks[0];
+  if (!track?.baseUrl) return null;
+
+  // Try fetching caption content (may fail if PO token required)
+  const result = await fetchAndParseCaptions(track.baseUrl + '&fmt=json3');
+  if (result) return result;
+
+  // Try XML format as fallback
+  return await fetchAndParseCaptions(track.baseUrl);
+}
+
+// Combined transcript fetching: tries all methods in order
+async function fetchTranscriptInBackground(videoId, tabId) {
+  // Method 1: Use already-captured timedtext URL (fastest)
+  let transcript = await fetchTranscriptViaCapturedUrl(videoId);
+  if (transcript) return transcript;
+
+  // Method 2: Trigger player to load captions, then capture the URL
+  if (tabId) {
+    transcript = await fetchTranscriptByTriggeringPlayer(videoId, tabId);
+    if (transcript) return transcript;
+  }
+
+  // Method 3: Anonymous HTML scraping fallback
+  transcript = await fetchTranscriptFromHtml(videoId);
+  if (transcript) return transcript;
+
+  return null;
+}
+
+// Fetch a caption URL and parse the response into plain text
+async function fetchAndParseCaptions(url) {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) return null;
+
+    const text = await response.text();
+    if (!text || text.length === 0) return null;
+
+    // Try JSON format (json3)
+    if (text.startsWith('{')) {
+      try {
+        const data = JSON.parse(text);
+        if (data.events) {
+          const transcript = data.events
+            .filter(event => event.segs)
+            .map(event => event.segs.map(seg => seg.utf8 || '').join(''))
+            .join(' ')
+            .replace(/\n/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+          if (transcript) return transcript;
+        }
+      } catch (e) { /* fall through */ }
+    }
+
+    // Try XML format
+    if (text.includes('<text')) {
+      const matches = text.match(/<text[^>]*>([^<]*)<\/text>/g);
+      if (matches) {
+        const transcript = matches
+          .map(match => {
+            const content = match.replace(/<text[^>]*>/, '').replace(/<\/text>/, '');
+            return content
+              .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+              .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&apos;/g, "'")
+              .replace(/\n/g, ' ');
+          })
+          .join(' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+        if (transcript) return transcript;
+      }
+    }
+
+    return null;
+  } catch (e) {
+    return null;
+  }
+}
+
 async function handleStartAnalysis(videoId, tabId) {
   // Check if already analyzing this video
   if (activeAnalyses.has(videoId)) {
@@ -102,29 +299,44 @@ async function runAnalysis(videoId, tabId) {
       throw new Error(`Unknown provider: ${provider}`);
     }
 
-    // Try to get transcript from content script, inject if needed
-    let transcriptResponse;
+    // Ensure content script is injected
     try {
-      transcriptResponse = await chrome.tabs.sendMessage(tabId, { action: 'getTranscript' });
+      await chrome.tabs.sendMessage(tabId, { action: 'ping' });
     } catch (connectionError) {
       await chrome.scripting.executeScript({
         target: { tabId },
         files: ['content/content.js']
       });
-      // Wait a moment for script to initialize
       await new Promise(resolve => setTimeout(resolve, 100));
-      transcriptResponse = await chrome.tabs.sendMessage(tabId, { action: 'getTranscript' });
     }
 
-    if (!transcriptResponse.success) {
-      throw new Error(transcriptResponse.error || 'Failed to extract transcript');
+    // Fetch transcript via background (captures YouTube's authenticated caption URLs)
+    let transcript = null;
+    try {
+      transcript = await fetchTranscriptInBackground(videoId, tabId);
+    } catch (bgError) {
+      console.log('Background transcript fetch failed:', bgError.message);
     }
 
-    const { transcript, videoTitle, metadata } = transcriptResponse;
+    // Get metadata and fallback transcript from content script
+    let contentResponse;
+    try {
+      contentResponse = await chrome.tabs.sendMessage(tabId, { action: 'getTranscript' });
+    } catch (e) {
+      contentResponse = { success: false };
+    }
+
+    // Fall back to content script transcript if background fetch failed
+    if (!transcript && contentResponse?.success && contentResponse.transcript) {
+      transcript = contentResponse.transcript;
+    }
 
     if (!transcript || transcript.trim().length === 0) {
-      throw new Error('No transcript available for this video');
+      throw new Error(contentResponse?.error || 'No transcript available for this video');
     }
+
+    const videoTitle = contentResponse?.videoTitle || 'YouTube Video';
+    const metadata = contentResponse?.metadata || {};
 
     // Update progress
     await updateAnalysisState(videoId, {
