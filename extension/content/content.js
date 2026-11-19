@@ -295,7 +295,7 @@ async function getTranscript() {
   if (!videoId) return null;
 
   // Method 1: Try extracting from ytInitialPlayerResponse (available in page context)
-  const transcriptFromPlayerResponse = await extractFromPlayerResponse();
+  const transcriptFromPlayerResponse = await extractFromPlayerResponse(videoId);
   if (transcriptFromPlayerResponse) return transcriptFromPlayerResponse;
 
   // Method 2: Try Innertube API (may fail due to PO token requirements)
@@ -309,7 +309,7 @@ async function getTranscript() {
   return null;
 }
 
-async function extractFromPlayerResponse() {
+async function extractFromPlayerResponse(videoId) {
   try {
     // Access ytInitialPlayerResponse from the page's main world
     // Content scripts run in an isolated world, so we need to inject a script
@@ -319,7 +319,13 @@ async function extractFromPlayerResponse() {
       script.textContent = `
         (function() {
           try {
-            const tracks = window.ytInitialPlayerResponse?.captions?.playerCaptionsTracklistRenderer?.captionTracks;
+            // ytInitialPlayerResponse describes the first video of the tab and is not
+            // updated when YouTube navigates in place, so ask the player first.
+            const player = document.getElementById('movie_player');
+            const live = player && player.getPlayerResponse && player.getPlayerResponse();
+            const response = [live, window.ytInitialPlayerResponse]
+              .find(r => r?.videoDetails?.videoId === ${JSON.stringify(videoId)});
+            const tracks = response?.captions?.playerCaptionsTracklistRenderer?.captionTracks;
             if (tracks && tracks.length > 0) {
               let track = tracks.find(t => t.languageCode === 'en' && t.kind !== 'asr');
               if (!track) track = tracks.find(t => t.languageCode === 'en');
@@ -474,6 +480,9 @@ function decodeHtmlEntities(text) {
 
 async function extractFromPageScripts() {
   try {
+    // After in-page navigation the <script> tags still belong to the first video
+    // of the tab, so only use caption URLs for the video that is shown now.
+    const videoId = getVideoId();
     const scripts = document.getElementsByTagName('script');
 
     for (const script of scripts) {
@@ -486,7 +495,7 @@ async function extractFromPageScripts() {
           let url = match[1];
           url = url.replace(/\\u0026/g, '&').replace(/\\\//g, '/');
 
-          if (url.includes('timedtext')) {
+          if (url.includes('timedtext') && new URL(url, location.origin).searchParams.get('v') === videoId) {
             return await fetchCaptionContent(url);
           }
         }
