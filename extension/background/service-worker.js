@@ -590,12 +590,14 @@ async function streamGoogle(videoId, prompt, apiKey, config) {
   const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
   try {
-    const url = `${config.endpoint}/${config.model}:streamGenerateContent?key=${apiKey}&alt=sse`;
+    // Send the key in a header: URLs end up in logs, proxies and error reports
+    const url = `${config.endpoint}/${config.model}:streamGenerateContent?alt=sse`;
 
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'x-goog-api-key': apiKey
       },
       body: JSON.stringify({
         contents: [{
