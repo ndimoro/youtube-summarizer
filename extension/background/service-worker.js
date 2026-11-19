@@ -86,11 +86,17 @@ chrome.webRequest.onCompleted.addListener(
       if (videoId) {
         // Store the URL, preferring English tracks
         const lang = url.searchParams.get('lang') || '';
+        const hasPot = url.searchParams.has('pot');
         const existing = capturedTimedtextUrls.get(videoId);
-        if (!existing || lang === 'en' || (!existing.lang?.startsWith('en') && lang.startsWith('en'))) {
+        // Only the player's own requests carry a PO token. Requests without one (such as
+        // the extension's own fallbacks fetching baseUrl) come back empty, so they must
+        // never replace a URL that has a token.
+        if (existing?.hasPot && !hasPot) return;
+        if (!existing || (hasPot && !existing.hasPot) || lang === 'en' || (!existing.lang?.startsWith('en') && lang.startsWith('en'))) {
           capturedTimedtextUrls.set(videoId, {
             url: details.url,
             lang,
+            hasPot,
             capturedAt: Date.now()
           });
         }
@@ -118,7 +124,10 @@ async function fetchTranscriptViaCapturedUrl(videoId) {
     captionUrl = captionUrl.replace(/&fmt=[^&]*/, '') + '&fmt=json3';
   }
 
-  return await fetchAndParseCaptions(captionUrl);
+  const transcript = await fetchAndParseCaptions(captionUrl);
+  // An empty answer will not get better on retry; drop the URL so the next attempt starts fresh
+  if (!transcript) capturedTimedtextUrls.delete(videoId);
+  return transcript;
 }
 
 // Fallback method: Ask the content script to trigger caption loading,
@@ -145,6 +154,56 @@ async function fetchTranscriptByTriggeringPlayer(videoId, tabId) {
   }
 
   return null;
+}
+
+// Runs in the page's main world. Loads the transcript the way YouTube's own
+// "Show transcript" panel does (youtubei/v1/get_panel). Unlike /api/timedtext this
+// needs no PO token, so it still works when YouTube answers caption requests with an
+// empty body (e.g. Ungoogled Chromium, see issue #4).
+async function fetchTranscriptPanelInPage(videoId) {
+  try {
+    const context = window.ytcfg?.data_?.INNERTUBE_CONTEXT || window.ytcfg?.get?.('INNERTUBE_CONTEXT');
+    if (!context) return null;
+    // params is a small protobuf message: field 145 { 1: videoId, 3: 1 }
+    const inner = [0x0a, videoId.length, ...Array.from(videoId, c => c.charCodeAt(0)), 0x18, 0x01];
+    const params = btoa(String.fromCharCode(0xaa, 0x09, inner.length, ...inner));
+    const response = await fetch('/youtubei/v1/get_panel?prettyPrint=false', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ context, panelId: 'PAmodern_transcript_view', params })
+    });
+    if (!response.ok) return null;
+    const data = await response.json();
+    const segments = [];
+    const walk = (node) => {
+      if (!node || typeof node !== 'object') return;
+      if (node.transcriptSegmentViewModel) {
+        const text = node.transcriptSegmentViewModel.simpleText;
+        if (text) segments.push(text);
+        return;
+      }
+      for (const value of Object.values(node)) walk(value);
+    };
+    walk(data);
+    const transcript = segments.join(' ').replace(/\s+/g, ' ').trim();
+    return transcript || null;
+  } catch (e) {
+    return null;
+  }
+}
+
+async function fetchTranscriptViaPanel(videoId, tabId) {
+  try {
+    const [injection] = await chrome.scripting.executeScript({
+      target: { tabId },
+      world: 'MAIN',
+      func: fetchTranscriptPanelInPage,
+      args: [videoId]
+    });
+    return injection?.result || null;
+  } catch (e) {
+    return null;
+  }
 }
 
 // Fallback method: Fetch transcript by scraping the watch page HTML anonymously
@@ -205,9 +264,13 @@ async function fetchTranscriptInBackground(videoId, tabId) {
   if (tabId) {
     transcript = await fetchTranscriptByTriggeringPlayer(videoId, tabId);
     if (transcript) return transcript;
+
+    // Method 3: Load the transcript the way YouTube's transcript panel does
+    transcript = await fetchTranscriptViaPanel(videoId, tabId);
+    if (transcript) return transcript;
   }
 
-  // Method 3: Anonymous HTML scraping fallback
+  // Method 4: Anonymous HTML scraping fallback
   transcript = await fetchTranscriptFromHtml(videoId);
   if (transcript) return transcript;
 
