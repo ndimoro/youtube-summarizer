@@ -832,6 +832,16 @@ async function initializePopup() {
 
   // If analysis is running, show current progress
   if (state?.status === 'running') {
+    // The stored state stays 'running' if the analysis was cut off (service worker
+    // stopped, browser closed). Without this check the popup would show the loading
+    // screen for this video forever, with no way to start again.
+    const status = await chrome.runtime.sendMessage({ action: 'getAnalysisStatus', videoId })
+      .catch(() => null);
+    if (status && status.status === 'running' && !status.active) {
+      setState('error', { message: 'The previous analysis was interrupted. Please try again.' });
+      return;
+    }
+
     if (state.streamingText) {
       setState('streaming');
       updateStreamingText(state.streamingText, state.videoTitle);

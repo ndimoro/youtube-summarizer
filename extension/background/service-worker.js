@@ -846,7 +846,10 @@ async function getAnalysisStatus(videoId) {
   }
 
   if (state) {
-    return state;
+    // activeAnalyses lives in memory. If Chrome stopped the service worker or the
+    // browser was closed during an analysis, the stored state still says 'running'
+    // although nothing is running any more; `active` lets the popup tell the two apart.
+    return { ...state, active: activeAnalyses.has(videoId) };
   }
 
   return { status: 'none' };
