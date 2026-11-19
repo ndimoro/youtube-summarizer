@@ -17,43 +17,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     sendResponse({ success: true });
     return;
   }
-
-  if (request.action === 'triggerCaptions') {
-    // Trigger YouTube's player to load captions, which generates an authenticated
-    // timedtext request that the background service worker can capture via webRequest
-    triggerCaptionLoading()
-      .then(() => sendResponse({ success: true }))
-      .catch(() => sendResponse({ success: false }));
-    return true;
-  }
 });
-
-async function triggerCaptionLoading() {
-  // Inject into the page's main world to access YouTube's player API
-  const script = document.createElement('script');
-  script.textContent = `
-    (function() {
-      try {
-        var player = document.getElementById('movie_player');
-        if (player && player.loadModule) {
-          player.loadModule('captions');
-          // Try to set an English caption track
-          var tracks = player.getPlayerResponse &&
-            player.getPlayerResponse()?.captions?.playerCaptionsTracklistRenderer?.captionTracks;
-          if (tracks && tracks.length > 0) {
-            var enTrack = tracks.find(function(t) { return t.languageCode === 'en'; }) || tracks[0];
-            player.setOption('captions', 'track', { languageCode: enTrack.languageCode });
-          }
-        }
-      } catch(e) {}
-    })();
-  `;
-  document.documentElement.appendChild(script);
-  script.remove();
-
-  // Wait a moment for the request to be made
-  await new Promise(resolve => setTimeout(resolve, 2000));
-}
 
 async function handleTranscriptRequest() {
   try {

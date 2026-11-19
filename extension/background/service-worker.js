@@ -121,30 +121,75 @@ async function fetchTranscriptViaCapturedUrl(videoId) {
   return await fetchAndParseCaptions(captionUrl);
 }
 
-// Fallback method: Ask the content script to trigger caption loading,
-// then wait for the webRequest listener to capture the URL
-async function fetchTranscriptByTriggeringPlayer(videoId, tabId) {
-  // Ask content script to trigger caption loading via the player API
+// Runs in the page's main world (via chrome.scripting) to reach YouTube's player API.
+// The content script cannot do this itself: inline <script> tags it inserts are
+// blocked by the Content Security Policy, so they never run.
+function triggerCaptionsInPage(videoId) {
   try {
-    await chrome.tabs.sendMessage(tabId, { action: 'triggerCaptions' });
+    const player = document.getElementById('movie_player');
+    if (!player || !player.loadModule || !player.getPlayerResponse) return { ok: false };
+    const response = player.getPlayerResponse();
+    if (response?.videoDetails?.videoId !== videoId) return { ok: false };
+    const tracks = response?.captions?.playerCaptionsTracklistRenderer?.captionTracks;
+    if (!tracks || tracks.length === 0) return { ok: false, noCaptions: true };
+
+    let current = null;
+    try { current = player.getOption('captions', 'track'); } catch (e) { /* module not loaded */ }
+    const wasOn = !!(current && current.languageCode);
+
+    player.loadModule('captions');
+    const enTrack = tracks.find(t => t.languageCode === 'en') || tracks[0];
+    player.setOption('captions', 'track', { languageCode: enTrack.languageCode });
+    return { ok: true, wasOn };
+  } catch (e) {
+    return { ok: false };
+  }
+}
+
+// Turns captions off again if they were only switched on to capture the transcript
+function captionsOffInPage() {
+  try {
+    const player = document.getElementById('movie_player');
+    if (player && player.unloadModule) player.unloadModule('captions');
+  } catch (e) { /* ignore */ }
+}
+
+// Fallback method: Make the player load captions, then wait for the
+// webRequest listener to capture the URL
+async function fetchTranscriptByTriggeringPlayer(videoId, tabId) {
+  let trigger;
+  try {
+    const [injection] = await chrome.scripting.executeScript({
+      target: { tabId },
+      world: 'MAIN',
+      func: triggerCaptionsInPage,
+      args: [videoId]
+    });
+    trigger = injection?.result;
   } catch (e) {
     return null;
   }
+  if (!trigger?.ok) return null;
 
-  // Wait up to 8 seconds for the webRequest listener to capture a timedtext URL
-  for (let i = 0; i < 16; i++) {
-    await new Promise(r => setTimeout(r, 500));
-    const captured = capturedTimedtextUrls.get(videoId);
-    if (captured) {
-      let captionUrl = captured.url;
-      if (!captionUrl.includes('fmt=json3')) {
-        captionUrl = captionUrl.replace(/&fmt=[^&]*/, '') + '&fmt=json3';
+  try {
+    // Wait up to 8 seconds for the webRequest listener to capture a timedtext URL
+    for (let i = 0; i < 40; i++) {
+      await new Promise(r => setTimeout(r, 200));
+      const captured = capturedTimedtextUrls.get(videoId);
+      if (captured) {
+        let captionUrl = captured.url;
+        if (!captionUrl.includes('fmt=json3')) {
+          captionUrl = captionUrl.replace(/&fmt=[^&]*/, '') + '&fmt=json3';
+        }
+        return await fetchAndParseCaptions(captionUrl);
       }
-      return await fetchAndParseCaptions(captionUrl);
+    }
+    return null;
+  } finally {
+    if (!trigger.wasOn) {
+      chrome.scripting.executeScript({ target: { tabId }, world: 'MAIN', func: captionsOffInPage }).catch(() => {});
     }
   }
-
-  return null;
 }
 
 // Fallback method: Fetch transcript by scraping the watch page HTML anonymously
